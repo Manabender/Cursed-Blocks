@@ -49,7 +49,7 @@ public class CurseManager : MonoBehaviour
     public static readonly int[] INITIAL_MAX_COST_CAP = { 150, 220, 300, 999999 };
     public static readonly int[] INITIAL_MAX_COST_CAP_RAMPING = { 1, 2, 3, 9 };
     public static readonly int[] INITIAL_SERENITY_RESET = { 8, 10, 12, 999999999 };
-    public static readonly int[] INITIAL_SERENITY_RESET_RAMPING = { 1, 2, 3, 999999 };
+    public static readonly int[] INITIAL_SERENITY_RESET_RAMPING = { 1, 1, 1, 999999 };
     public static readonly int[] INITIAL_SERENITY_DURATION = { 2, 2, 2, 9 };
 
     public const int DIFFICULTY_NIGHTMARE = 3;
@@ -393,7 +393,7 @@ public class CurseManager : MonoBehaviour
         CURSE_DATA[(int)Curse.CLUMPED] = new CurseData(
             "Clumped",
             "Lines don't clear until you fill four of them",
-            50);
+            80);
 
         CURSE_DATA[(int)Curse.SLOW_HOLD] = new CurseData(
             "Slow Hold",
