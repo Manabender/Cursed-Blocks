@@ -93,20 +93,20 @@ public class Orchestrator : MonoBehaviour
     public const int BASE_SCORE_MULTIPLIER = 20;
     public const int DROP_SCORE_MULTIPLIER = 21;
 
-    public readonly string[] CLEAR_NAMES = new string[] { "", "SINGLE", "DOUBLE", "TRIPLE", "QUADRUPLE", "PENTUPLE", "SEXTUPLE", "SEPTUPLE", "OCTUPLE", "WHAT?", "HOW?", "CHEATER?", "HACKER?" };
-    public const string T_SPIN_MINI_TEXT = "T-SPIN MINI";
-    public const string T_SPIN_TEXT = "T-SPIN";
+    public readonly string[] CLEAR_NAMES = new string[] { "", "Single", "Double", "Triple", "Quadruple", "Pentuple", "Sextuple", "Septuple", "Octuple", "WHAT?", "HOW?", "CHEATER?", "HACKER?" };
+    public const string T_SPIN_MINI_TEXT = "T-spin mini";
+    public const string T_SPIN_TEXT = "T-spin";
     public const string ALL_CLEAR_TEXT = "---ALL CLEAR!!!---";
     public const string COLOR_CLEAR_TEXT = "---COLOR CLEAR!!---";
-    public const string COMBO_TEXT = "COMBO: ";
-    public const string BACK_TO_BACK_TEXT = "BACK-TO-BACK x";
+    public const string COMBO_TEXT = "Combo: ";
+    public const string BACK_TO_BACK_TEXT = "Back-to-Back x";
     public const string GAME_OVER_TEXT = "GAME OVER\nPRESS {0} TO RESET";
     public const string PAUSED_TEXT = "PAUSED\nPRESS {0} TO RESUME";
-    public const string ANTISKIM_TEXT = "AVOID SINGLES";
-    public const string ANTIGRAV_TEXT = "ANTIGRAV";
-    public const string SLOW_HOLD_TEXT = "SLOW HOLD";
-    public const string SLIPPERY_TEXT = "SLIPPERY";
-    public const string CLUMPED_TEXT = "CLUMPED";
+    public const string ANTISKIM_TEXT = "Avoid Singles";
+    public const string ANTIGRAV_TEXT = "Antigrav";
+    public const string SLOW_HOLD_TEXT = "Slow hold";
+    public const string SLIPPERY_TEXT = "Slippery";
+    public const string CLUMPED_TEXT = "Clumped";
     public const float CLEAR_TYPE_TIMER_LENGTH = 2.0f; //Time (in seconds) for clear type text to stay on screen.
     public const float FULL_CLEAR_TIMER_LENGTH = 3.0f; //Time (in seconds) for full clear text to stay on screen.
 
@@ -724,7 +724,7 @@ public class Orchestrator : MonoBehaviour
     {
         int curseBonus = ref_CurseManager.CurrentCurseLevel();
         scoreMultiplier = BASE_SCORE_MULTIPLIER + bagNumber + curseBonus;
-        ref_ScoreInfoText.text = "BAG " + bagNumber + "\nCURSE LV " + curseBonus + "\nSCORE MULT " + scoreMultiplier;
+        ref_ScoreInfoText.text = "Bag " + bagNumber + "\nCurse LV " + curseBonus + "\nScore multiplier " + scoreMultiplier;
     }
 
     //Several curses have a specific on-screen visual to indicate they are active. This method shows or hides them as appropriate.

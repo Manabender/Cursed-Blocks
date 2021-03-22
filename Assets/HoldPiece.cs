@@ -124,7 +124,7 @@ public class HoldPiece : Piece
         }
         else
         {
-            string text = "SPIKED ";
+            string text = "Spiked ";
             for (int i = 0; i < spikes; i++)
             {
                 text += "(*)";
@@ -146,7 +146,7 @@ public class HoldPiece : Piece
         }
         else
         {
-            string text = "EPHEMEREAL [";
+            string text = "Ephemereal [";
             for (int i = 0; i < ephemereal; i++)
             {
                 text += "*";

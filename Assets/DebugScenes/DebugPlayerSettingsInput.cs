@@ -54,7 +54,7 @@ public class DebugPlayerSettingsInput : MonoBehaviour
         map.FindAction("Hold").ChangeBinding(0).WithPath(PlayerPrefs.GetString("keyHold"));
         map.FindAction("Pause").ChangeBinding(0).WithPath(PlayerPrefs.GetString("keyPause"));
         map.FindAction("Reset").ChangeBinding(0).WithPath(PlayerPrefs.GetString("keyReset"));
-        Debug.Log(map.actions[0].bindings[0].path);
+        //Debug.Log(map.actions[0].bindings[0].path);
         totalBindings = map.actions.Count;
     }
 
