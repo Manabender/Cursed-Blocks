@@ -63,20 +63,6 @@ public class CurseManager : MonoBehaviour
         PopulateCurseData();
     }
 
-    // Start is called before the first frame update
-    /*void Start()
-    {        
-        //ResetObject(); //This is now called in Queue to ensure that the curse manager is ready to add curses before it's told to add curses.
-    }*/
-
-    /*
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    */
-
     //This method generates a new array to append to activeCurses. Or, determines what curses will be active in the next generated bag (note that 20ish bags are already generated at any time and this adds another one on the end of that)
     //This method is called from Queue.AddBag and returns to it the list of curses active in that bag, which it uses to determine what pieces to put in that bag.
     public int[] CreateNewCurses()

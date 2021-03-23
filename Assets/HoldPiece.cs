@@ -31,12 +31,6 @@ public class HoldPiece : Piece
         ResetObject();
     }
 
-    // Update is called once per frame
-    /*void Update()
-    {
-        
-    }*/
-
     //ResetObject is a method that appears in several object scripts that resets it to start-of-game values.
     public void ResetObject()
     {

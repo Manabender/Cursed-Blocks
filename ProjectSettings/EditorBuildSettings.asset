@@ -12,6 +12,21 @@ EditorBuildSettings:
     path: Assets/MenuScenes/Main/MainMenu.unity
     guid: 902a0c13ad694254389639a3ec68417d
   - enabled: 1
+    path: Assets/MenuScenes/DifficultySelect/DifficultySelect.unity
+    guid: 7d5b0b079de9ca3459354bf3d1bcdacf
+  - enabled: 1
+    path: Assets/MenuScenes/ExtraModes/ExtraModes.unity
+    guid: f5297c1438cffdb479d8969c64c52567
+  - enabled: 1
+    path: Assets/MenuScenes/Settings/Settings.unity
+    guid: d9ccaab3ab5d4e44089892619ae7edd7
+  - enabled: 1
+    path: Assets/MenuScenes/HighScores/HighScores.unity
+    guid: 448e7c39fa37fa040be47c01a10886cb
+  - enabled: 1
+    path: Assets/MenuScenes/Information/Information.unity
+    guid: fde62353bf2d283429ee027f7d4e84db
+  - enabled: 1
     path: Assets/MainGameScene.unity
     guid: 6c2373af78807114ba0f9497cb6e3cc1
   - enabled: 1

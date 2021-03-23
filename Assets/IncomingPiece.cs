@@ -30,12 +30,6 @@ public class IncomingPiece : Piece
         transform.localPosition = new Vector3((posX * MINO_SIZE) + (MINO_SIZE / 2), (posY * MINO_SIZE) + (MINO_SIZE / 2), PIECE_Z - 1); //Hacky looking coordinates are needed to align the piece to the grid. //Piece Z has minus 1 so it appears on top of the active piece
     }
 
-    // Update is called once per frame
-    /*void Update()
-    {
-        
-    }*/
-
     //This method updates everything related to the incoming piece.
     public void UpdateIncomingPiece()
     {
