@@ -36,8 +36,9 @@ public class Queue : MonoBehaviour
     public const int TWIN_END_INDEX = 90;
     public const int H_PIECE_INDEX = 110;
     public const int MONOMINO_PIECE_INDEX = 111;
-    public const int BIG_O_PIECE_INDEX = 112;
-    public const int BIG_H_PIECE_INDEX = 113;
+    public const int MIRROR_MONOMINO_PIECE_INDEX = 112;
+    public const int BIG_O_PIECE_INDEX = 113;
+    public const int BIG_H_PIECE_INDEX = 114;
     public const int DISGUISES_PER_BAG = 3;
     public const int HARDS_PER_BAG = 1;
     public const int FLOATINGS_PER_BAG = 1;
@@ -129,9 +130,10 @@ public class Queue : MonoBehaviour
         //If serenity is active, add two monominoes.
         if (bagCurses[0] < 0)
         {
+            int monoIndex = ref_Orchestrator.mirrorMonominoRotation ? MIRROR_MONOMINO_PIECE_INDEX : MONOMINO_PIECE_INDEX; //This takes care of the "mirror monomino teleportation" player setting.
             for (int i = 0; i < MONOMINOES_PER_SERENE_BAG; i++)
             {
-                bag.Add(new BagPiece(MONOMINO_PIECE_INDEX));
+                bag.Add(new BagPiece(monoIndex));
             }
         }
         //If pentomino curse is active, add pentominoes. Adds one "nice" pentomino then any other pentomino, and never the same one twice.

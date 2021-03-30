@@ -82,13 +82,15 @@ public class Orchestrator : MonoBehaviour
     public bool moveLeftHeld = false;
     public bool moveRightHeld = false;
     public bool moveLeftMostRecent = false; //Was LEFT the most recent move key pressed? (moveRightMostRecent is implied to be the opposite.)
+    //Player settings
     public float softDropGravity; //Gravity used when soft-drop is held.
     public int das; //DAS, short for Delayed Auto-Shift, is the time (in game frames, which are 2ms each) a left/right key must be pressed before Auto-Shift kicks in.
     public int arr; //ARR, short for Auto-Repeat Rate, is the time (in game frames) between Auto-Shifts, where the active piece moves repeatedly while a left/right key is held.
     public int rotateDCD; //DCD, short for DAS Cut Delay, resets the active DAS timer(s) to the DCD value when another input is made. Separate DCDs exist for rotation, hold, and harddrop.
     public int harddropDCD;
     public int holdDCD;
-    public bool resetDASOnDirChange; //User option which, if enabled, resets one direction's DAS timer if the other direction is pressed or released.
+    public bool resetDASOnDirChange; //If enabled, resets one direction's DAS timer if the other direction is pressed or released.
+    public bool mirrorMonominoRotation; //If enabled, the direction that monominoes "teleport" is mirrored. Normally CW goes right and CCW goes left, but if this is enabled (set to true), CW goes left and CCW goes right.
 
     public const int BASE_SCORE_MULTIPLIER = 20;
     public const int DROP_SCORE_MULTIPLIER = 21;
@@ -136,7 +138,8 @@ public class Orchestrator : MonoBehaviour
         rotateDCD = PlayerPrefs.GetInt("rotateDCD");
         harddropDCD = PlayerPrefs.GetInt("harddropDCD");
         holdDCD = PlayerPrefs.GetInt("holdDCD");
-        resetDASOnDirChange = PlayerPrefs.GetInt("interruptDAS") == 1; //A somewhat odd way of typcasting an int to a bool...
+        resetDASOnDirChange = (PlayerPrefs.GetInt("interruptDAS") == 1); //A somewhat odd way of typcasting an int to a bool...
+        mirrorMonominoRotation = (PlayerPrefs.GetInt("mirrorMono") == 1);
         //User keybind settings
         InputActionMap map = ref_PlayerInput.actions.FindActionMap("Piece");
         map.FindAction("Shift left").ChangeBinding(0).WithPath(PlayerPrefs.GetString("keyLeft"));

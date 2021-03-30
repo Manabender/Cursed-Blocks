@@ -1648,7 +1648,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Make consecutive ALL CLEARS with normal pieces, on an 11-wide board.
+  m_Text: 
 --- !u!222 &327347320
 CanvasRenderer:
   m_ObjectHideFlags: 0

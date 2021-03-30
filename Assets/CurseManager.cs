@@ -48,7 +48,7 @@ public class CurseManager : MonoBehaviour
     public static readonly int[] INITIAL_BASE_COST_CAP_RAMPING = { 1, 1, 2, 9 };
     public static readonly int[] INITIAL_MAX_COST_CAP = { 150, 220, 300, 999999 };
     public static readonly int[] INITIAL_MAX_COST_CAP_RAMPING = { 1, 2, 3, 9 };
-    public static readonly int[] INITIAL_SERENITY_RESET = { 8, 10, 12, 999999999 };
+    public static readonly int[] INITIAL_SERENITY_RESET = { 8, 2, 12, 999999999 };
     public static readonly int[] INITIAL_SERENITY_RESET_RAMPING = { 1, 1, 1, 999999 };
     public static readonly int[] INITIAL_SERENITY_DURATION = { 2, 2, 2, 9 };
 

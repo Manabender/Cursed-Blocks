@@ -123,6 +123,7 @@ public class Piece : MonoBehaviour
     private readonly Vector2Int[,][] KICKTABLE_BIG_H = new Vector2Int[4, 4][];
     private readonly Vector2Int[,][] KICKTABLE_TWIN = new Vector2Int[4, 4][];
     private readonly Vector2Int[,][] KICKTABLE_MONO = new Vector2Int[4, 4][];
+    private readonly Vector2Int[,][] KICKTABLE_MIRROR_MONO = new Vector2Int[4, 4][];
     private readonly Vector2Int[] STANDARD_SPIN_CHECK_OFFSETS = new Vector2Int[] { new Vector2Int(-1, 1), new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, -1) };
     private readonly int[] STANDARD_SPIN_CHECK_VALUES = new int[] { 3, 3, 2, 2 };
     private const int STANDARD_SPIN_CHECK_MINI_THRESHOLD = 7;
@@ -388,8 +389,22 @@ public class Piece : MonoBehaviour
         KICKTABLE_MONO[(int)RotState.CWI, (int)RotState.CCW] = new Vector2Int[] { new Vector2Int(0, -2), new Vector2Int(0, 0) };
         KICKTABLE_MONO[(int)RotState.CCW, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(0, -2), new Vector2Int(0, 0) };
 
+        // This kicktable implements mirrored monomino rotation. This is a togglable setting that the player may use if desired.
+        KICKTABLE_MIRROR_MONO[(int)RotState.NAT, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(-2, 0), new Vector2Int(-2, -1), new Vector2Int(-1, -1), new Vector2Int(-2, -2), new Vector2Int(-1, -2), new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.CWI, (int)RotState.NAT] = new Vector2Int[] { new Vector2Int(2, 0), new Vector2Int(2, -1), new Vector2Int(1, -1), new Vector2Int(2, -2), new Vector2Int(1, -2), new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.CWI, (int)RotState.TWO] = new Vector2Int[] { new Vector2Int(-2, 0), new Vector2Int(-2, -1), new Vector2Int(-1, -1), new Vector2Int(-2, -2), new Vector2Int(-1, -2), new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.TWO, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(2, 0), new Vector2Int(2, -1), new Vector2Int(1, -1), new Vector2Int(2, -2), new Vector2Int(1, -2), new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.TWO, (int)RotState.CCW] = new Vector2Int[] { new Vector2Int(-2, 0), new Vector2Int(-2, -1), new Vector2Int(-1, -1), new Vector2Int(-2, -2), new Vector2Int(-1, -2), new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.CCW, (int)RotState.TWO] = new Vector2Int[] { new Vector2Int(2, 0), new Vector2Int(2, -1), new Vector2Int(1, -1), new Vector2Int(2, -2), new Vector2Int(1, -2), new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.CCW, (int)RotState.NAT] = new Vector2Int[] { new Vector2Int(-2, 0), new Vector2Int(-2, -1), new Vector2Int(-1, -1), new Vector2Int(-2, -2), new Vector2Int(-1, -2), new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.NAT, (int)RotState.CCW] = new Vector2Int[] { new Vector2Int(2, 0), new Vector2Int(2, -1), new Vector2Int(1, -1), new Vector2Int(2, -2), new Vector2Int(1, -2), new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.NAT, (int)RotState.TWO] = new Vector2Int[] { new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.TWO, (int)RotState.NAT] = new Vector2Int[] { new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.CWI, (int)RotState.CCW] = new Vector2Int[] { new Vector2Int(0, -2), new Vector2Int(0, 0) };
+        KICKTABLE_MIRROR_MONO[(int)RotState.CCW, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(0, -2), new Vector2Int(0, 0) };
+
         //// Piece shape key: # = mino, @ = center-of-rotation mino, * = center-of-rotation without a mino on it
-        
+
         // Piece ID quick reference:
         // Tetrominoes: 0-6
         // Pentominoes: 10-27
@@ -1489,13 +1504,24 @@ public class Piece : MonoBehaviour
             COLOR_PINK
         );
 
+        /*  Mirrored Monomino (Has a mirrored kicktable, used if the setting "mirror monomino rotation" is enabled)
+         *  
+         *   @
+         */
+        PIECE_DATA[112] = new PieceData(
+            new Vector2Int[] { new Vector2Int(0, 0) },
+            ROTATION_OFFSETS_NONE,
+            KICKTABLE_MIRROR_MONO,
+            COLOR_PINK
+        );
+
         /*  Big (but not BIG) O piece
          *  
          *   ###
          *   #*#
          *   ###
          */
-        PIECE_DATA[112] = new PieceData(
+        PIECE_DATA[113] = new PieceData(
             new Vector2Int[] { new Vector2Int(-1, -1), new Vector2Int(0, -1), new Vector2Int(1, -1), new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(-1, 1), new Vector2Int(0, 1), new Vector2Int(1, 1) },
             ROTATION_OFFSETS_NONE,
             KICKTABLE_SRS_O,
@@ -1509,7 +1535,7 @@ public class Piece : MonoBehaviour
          *   #* #
          *   #  #
          */
-        PIECE_DATA[113] = new PieceData(
+        PIECE_DATA[114] = new PieceData(
             new Vector2Int[] { new Vector2Int(-1, -1), new Vector2Int(2, -1), new Vector2Int(-1, 0), new Vector2Int(2, 0), new Vector2Int(-1, 1), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1), new Vector2Int(-1, 2) },
             ROTATION_OFFSETS_EVENBOX_LL,
             KICKTABLE_BIG_H,
