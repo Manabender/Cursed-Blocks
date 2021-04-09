@@ -117,7 +117,7 @@ public class Piece : MonoBehaviour
     private readonly Vector2Int[,][] KICKTABLE_SRS_3X3 = new Vector2Int[4, 4][];
     private readonly Vector2Int[,][] KICKTABLE_SRS_2X4_3X4 = new Vector2Int[4, 4][];
     private readonly Vector2Int[,][] KICKTABLE_I5 = new Vector2Int[4, 4][];
-    private readonly Vector2Int[,][] KICKTABLE_PSUEDO_I = new Vector2Int[4, 4][];
+    private readonly Vector2Int[,][] KICKTABLE_PSEUDO_I = new Vector2Int[4, 4][];
     private readonly Vector2Int[,][] KICKTABLE_PENTA_P_A = new Vector2Int[4, 4][];
     private readonly Vector2Int[,][] KICKTABLE_PENTA_P_B = new Vector2Int[4, 4][];
     private readonly Vector2Int[,][] KICKTABLE_BIG_H = new Vector2Int[4, 4][];
@@ -297,19 +297,19 @@ public class Piece : MonoBehaviour
         KICKTABLE_I5[(int)RotState.CCW, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(0, 0) };
 
         // This is a custom kicktable for the pseudo-I piece, which is just four minoes in a diagonal line. No other kicktable seems appropriate, so instead, I'm just going with a simple solution: Try the natural, then try a rotation around each mino.
-        KICKTABLE_PSUEDO_I[(int)RotState.NAT, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, -1), new Vector2Int(0, 1), new Vector2Int(0, -3), new Vector2Int(0, 3) };
-        KICKTABLE_PSUEDO_I[(int)RotState.CWI, (int)RotState.NAT] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(0, 3), new Vector2Int(0, -3) };
-        KICKTABLE_PSUEDO_I[(int)RotState.CWI, (int)RotState.TWO] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(-3, 0), new Vector2Int(3, 0) };
-        KICKTABLE_PSUEDO_I[(int)RotState.TWO, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(3, 0), new Vector2Int(-3, 0) };
-        KICKTABLE_PSUEDO_I[(int)RotState.TWO, (int)RotState.CCW] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(0, 3), new Vector2Int(0, -3) };
-        KICKTABLE_PSUEDO_I[(int)RotState.CCW, (int)RotState.TWO] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, -1), new Vector2Int(0, 1), new Vector2Int(0, -3), new Vector2Int(0, 3) };
-        KICKTABLE_PSUEDO_I[(int)RotState.CCW, (int)RotState.NAT] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(3, 0), new Vector2Int(-3, 0) };
-        KICKTABLE_PSUEDO_I[(int)RotState.NAT, (int)RotState.CCW] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(-3, 0), new Vector2Int(3, 0) };
+        KICKTABLE_PSEUDO_I[(int)RotState.NAT, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, -1), new Vector2Int(0, 1), new Vector2Int(0, -3), new Vector2Int(0, 3) };
+        KICKTABLE_PSEUDO_I[(int)RotState.CWI, (int)RotState.NAT] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(0, 3), new Vector2Int(0, -3) };
+        KICKTABLE_PSEUDO_I[(int)RotState.CWI, (int)RotState.TWO] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(-3, 0), new Vector2Int(3, 0) };
+        KICKTABLE_PSEUDO_I[(int)RotState.TWO, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(3, 0), new Vector2Int(-3, 0) };
+        KICKTABLE_PSEUDO_I[(int)RotState.TWO, (int)RotState.CCW] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(0, 3), new Vector2Int(0, -3) };
+        KICKTABLE_PSEUDO_I[(int)RotState.CCW, (int)RotState.TWO] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, -1), new Vector2Int(0, 1), new Vector2Int(0, -3), new Vector2Int(0, 3) };
+        KICKTABLE_PSEUDO_I[(int)RotState.CCW, (int)RotState.NAT] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(3, 0), new Vector2Int(-3, 0) };
+        KICKTABLE_PSEUDO_I[(int)RotState.NAT, (int)RotState.CCW] = new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(-3, 0), new Vector2Int(3, 0) };
         // The pseudo-I piece doesn't need a 180 kicktable, since a 180 rotation just places it exactly back where it was.
-        KICKTABLE_PSUEDO_I[(int)RotState.NAT, (int)RotState.TWO] = new Vector2Int[] { new Vector2Int(0, 0) };
-        KICKTABLE_PSUEDO_I[(int)RotState.TWO, (int)RotState.NAT] = new Vector2Int[] { new Vector2Int(0, 0) };
-        KICKTABLE_PSUEDO_I[(int)RotState.CWI, (int)RotState.CCW] = new Vector2Int[] { new Vector2Int(0, 0) };
-        KICKTABLE_PSUEDO_I[(int)RotState.CCW, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(0, 0) };
+        KICKTABLE_PSEUDO_I[(int)RotState.NAT, (int)RotState.TWO] = new Vector2Int[] { new Vector2Int(0, 0) };
+        KICKTABLE_PSEUDO_I[(int)RotState.TWO, (int)RotState.NAT] = new Vector2Int[] { new Vector2Int(0, 0) };
+        KICKTABLE_PSEUDO_I[(int)RotState.CWI, (int)RotState.CCW] = new Vector2Int[] { new Vector2Int(0, 0) };
+        KICKTABLE_PSEUDO_I[(int)RotState.CCW, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(0, 0) };
 
         // This kicktable is standard SRS, with one extra kick at the start. It is used for the P pentominoes to simulate them having evenbox around their "O piece".
         KICKTABLE_PENTA_P_A[(int)RotState.NAT, (int)RotState.CWI] = new Vector2Int[] { new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(-1, 0), new Vector2Int(-1, 1), new Vector2Int(0, -2), new Vector2Int(-1, -2) };
@@ -1096,7 +1096,7 @@ public class Piece : MonoBehaviour
         PIECE_DATA[56] = new PieceData(
             new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(-1, -1), new Vector2Int(1, 1), new Vector2Int(2, 2) },
             ROTATION_OFFSETS_EVENBOX_LL,
-            KICKTABLE_PSUEDO_I,
+            KICKTABLE_PSEUDO_I,
             COLOR_CYAN
         );
 

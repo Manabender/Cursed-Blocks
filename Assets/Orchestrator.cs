@@ -91,7 +91,6 @@ public class Orchestrator : MonoBehaviour
     public int holdDCD;
     public bool resetDASOnDirChange; //If enabled, resets one direction's DAS timer if the other direction is pressed or released.
     public bool mirrorMonominoRotation; //If enabled, the direction that monominoes "teleport" is mirrored. Normally CW goes right and CCW goes left, but if this is enabled (set to true), CW goes left and CCW goes right.
-
     public const int BASE_SCORE_MULTIPLIER = 20;
     public const int DROP_SCORE_MULTIPLIER = 21;
 
