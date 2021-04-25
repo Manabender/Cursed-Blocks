@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /* Board class
  * Broadly, this class handles the overall state of the game.
@@ -25,6 +26,9 @@ public class Board : MonoBehaviour
     public int[,] displayCells; //The cells to actually display. Normally identical to cells[,], but the Mist curse can change this.
     public GameObject cellPrefab; //Prototype GameObject that references a Cell prefab (set in the Unity editor).
     public Orchestrator ref_Orchestrator;
+    public GameObject ref_Container;
+    public GridLayoutGroup ref_GridLayout;
+    public GameObject ref_KillLine;
     public int clumpedLines; //The number of filled lines that exist at the moment. If the Clumped curse is active, filled lines won't go away until at least four are all simultaneously filled.
     public int aaaaa = 0; //Please don't ask why this is here. It shouldn't be here. (It was used for testing purposes.)
 
@@ -34,6 +38,7 @@ public class Board : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SetWidth(PersistantVars.pVars.width);
         cells = new int[width, absoluteHeight]; //Array size can't be known until the board size is known, but by the time Start() is called, the size is known and has had the opportunity to be overridden.
         displayCells = new int[width, absoluteHeight];
 
@@ -61,6 +66,7 @@ public class Board : MonoBehaviour
     //ResetObject is a method that appears in several object scripts that resets it to start-of-game values.
     public void ResetObject()
     {
+        SetWidth(PersistantVars.pVars.width);
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < absoluteHeight; y++)
@@ -70,6 +76,15 @@ public class Board : MonoBehaviour
             }
         }
         clumpedLines = 0;
+    }
+
+    public void SetWidth(int w)
+    {
+        width = w;
+        ref_GridLayout.constraintCount = w;
+        //Debug.Log(ref_Container.GetComponent<RectTransform>().sizeDelta);
+        ref_Container.GetComponent<RectTransform>().sizeDelta = new Vector2(width * Piece.MINO_SIZE, absoluteHeight * Piece.MINO_SIZE);
+        ref_KillLine.GetComponent<SpriteRenderer>().size = new Vector2(width * Piece.MINO_SIZE, 4);
     }
 
     //This method adds one line of garbage. It takes as an argument a list of ints representing the columns which should be empty. Implicitly, all other columns should be filled.
@@ -253,6 +268,8 @@ public class Board : MonoBehaviour
         {
             spinCheckValue = 2; //Implements the "full spin if 2+ lines cleared" rule that couldn't be implemented in SpinCheck; see that method for why.
         }
+
+        ref_Orchestrator.linesCleared += scoringLinesCleared;
 
         return scoringLinesCleared + (100 * spinCheckValue);
     }

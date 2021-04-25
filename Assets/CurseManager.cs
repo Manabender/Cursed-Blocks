@@ -220,6 +220,10 @@ public class CurseManager : MonoBehaviour
     //This method advances the curse array queue. Or, basically, it just deletes the first array.
     public void NextCurseBag()
     {
+        if (PersistantVars.pVars.goal != ModeGoal.SURVIVE) //The curse list only exists in the actual cursed mode. No need to do anything in other modes.
+        {
+            return;
+        }
         activeCurses.RemoveAt(0);
         Destroy(curseRows[0]);
         curseRows.RemoveAt(0);
@@ -228,7 +232,11 @@ public class CurseManager : MonoBehaviour
     //This method is used is various places to ask if a particular curse is active at the moment. As one might predict, it returns true if so and false if not.
     public bool IsCurseActive(Curse curse)
     {
-        return activeCurses[0][0] >= 0 && (activeCurses[0][(int)curse] > 0 || PersistantVars.pVars.forcedCurses[(int)curse]); //If notSerenity and (curseActive or curseForcedActive)
+        if (PersistantVars.pVars.goal == ModeGoal.SURVIVE) //Curses are only relevant in the actual cursed mode. All curses are off in other modes.
+        {
+            return activeCurses[0][0] >= 0 && (activeCurses[0][(int)curse] > 0 || PersistantVars.pVars.forcedCurses[(int)curse]); //If notSerenity and (curseActive or curseForcedActive)
+        }
+        return false;
         /*if (activeCurses[0][0] >= 0 && activeCurses[0][(int)curse] > 0) //If serenity is not active AND if the specified curse has a duration of 1 or more...
         {
             return true;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -103,59 +104,68 @@ public class ExtraModesInput : MonoBehaviour
         tooltipText.text = "";
     }
 
+    public void StartCustomMode(ModeGoal goal, BagType bagtype, int width, bool overtuned)
+    {
+        PersistantVars.pVars.goal = goal;
+        PersistantVars.pVars.bagType = bagtype;
+        PersistantVars.pVars.width = width;
+        PersistantVars.pVars.overtuned = overtuned;
+        SceneManager.LoadScene("MainGameScene"); //Start game.
+    }
+
     public void OnPentaSprint()
     {
-        //TODO
+        StartCustomMode(ModeGoal.SPRINT, BagType.PENTA, 12, false);
     }
 
     public void OnPentaUltra()
     {
-        //TODO
+        StartCustomMode(ModeGoal.ULTRA, BagType.PENTA, 12, false);
     }
 
     public void OnPentathon()
     {
-        //TODO
+        StartCustomMode(ModeGoal.MARATHON, BagType.PENTA, 12, false);
     }
 
     public void OnPseudoSprint()
     {
-        //TODO
+        StartCustomMode(ModeGoal.SPRINT, BagType.PSEUDO, 10, false);
     }
 
     public void OnPseudoUltra()
     {
-        //TODO
+        StartCustomMode(ModeGoal.ULTRA, BagType.PSEUDO, 10, false);
     }
 
     public void OnPseudothon()
     {
-        //TODO
+        StartCustomMode(ModeGoal.MARATHON, BagType.PSEUDO, 10, false);
     }
 
     public void OnOverSprint()
     {
-        //TODO
+        StartCustomMode(ModeGoal.SPRINT, BagType.TETRA, 10, true);
     }
 
     public void OnOverUltra()
     {
-        //TODO
+        StartCustomMode(ModeGoal.ULTRA, BagType.TETRA, 10, true);
     }
 
     public void OnOverthon()
     {
-        //TODO
+        StartCustomMode(ModeGoal.MARATHON, BagType.TETRA, 10, true);
     }
 
     public void OnWidePC()
     {
-        //TODO
+        StartCustomMode(ModeGoal.ALLCLEAR, BagType.TETRA, 11, false);
     }
 
     public void OnNarrowPC()
     {
-        //TODO
+        StartCustomMode(ModeGoal.ALLCLEAR, BagType.TETRA, 9, false);
     }
 
     public void OnNightmare()
@@ -176,7 +186,7 @@ public class ExtraModesInput : MonoBehaviour
     public void OnYesNightmare()
     {
         PersistantVars.pVars.difficulty = 3;
-        SceneManager.LoadScene("MainGameScene"); //Start game.
+        StartCustomMode(ModeGoal.SURVIVE, BagType.CURSED, 10, false);
     }
 
     public void OnNoNightmare()

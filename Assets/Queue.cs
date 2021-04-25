@@ -26,6 +26,9 @@ public class Queue : MonoBehaviour
 
     public readonly int[] DROUGHT_FLOOD_PIECES = new int[] { 1, 3, 4, 5, 6 }; //The pieces that drought and flood can add. Basically all tetrominoes except I and T.
     public readonly int[] NICE_PENTOMINOES = new int[] { 12, 13, 14, 17, 18, 19, 21 }; //Pentomino curse gives one of these, then one of *any* pentomino. Includes I5, J5, L5, Pa, Pb, T5, and V.
+    public readonly int[] TETRA_BAG = new int[] { 0, 1, 2, 3, 4, 5, 6 };
+    public readonly int[] PENTA_BAG = new int[] { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 };
+    public readonly int[] PSEUDO_BAG = new int[] { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56 };
     public const int PENTOMINOES_START_INDEX = 10;
     public const int PENTOMINOES_END_INDEX = 27;
     public const int PSEUDO_START_INDEX = 30;
@@ -116,8 +119,33 @@ public class Queue : MonoBehaviour
         }
     }
 
-    // BuildNewBag() generates a bag of pieces to be added to the queue.
+    // BuildNewBag() determines which bag type should be generated, then calls an appropriate function to build that particular bag.
     public void BuildNewBag()
+    {
+        if (PersistantVars.pVars.bagType == BagType.CURSED)
+        {
+            BuildCursedBag();
+        }
+        else if (PersistantVars.pVars.bagType == BagType.TETRA)
+        {
+            BuildSetBag(TETRA_BAG);
+        }
+        else if (PersistantVars.pVars.bagType == BagType.PENTA)
+        {
+            BuildSetBag(PENTA_BAG);
+        }
+        else if (PersistantVars.pVars.bagType == BagType.PSEUDO)
+        {
+            BuildSetBag(PSEUDO_BAG);
+        }
+        else if (PersistantVars.pVars.bagType == BagType.CUSTOMBAG)
+        {
+            //TODO
+        }
+    }
+
+    // BuildCursedBag() generates a bag of pieces to be added to the queue, in the main "cursed" game mode.
+    public void BuildCursedBag()
     {
         //First, we need a new list of curses for this bag. Ask CurseManager to generate that.
         int[] bagCurses = ref_Orchestrator.ref_CurseManager.CreateNewCurses();
@@ -293,7 +321,26 @@ public class Queue : MonoBehaviour
         AddBag(shuffledBag);
     }
 
-    //A function to make the conditionals in BuildNewBag cleaner.
+    // BuildSetBag() generates a bag with a given set of pieces. Used in extra modes.
+    public void BuildSetBag(int[] pieces)
+    {
+        BagPiece[] bag = new BagPiece[pieces.Length];
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            bag[i] = new BagPiece(pieces[i]);
+        }
+        //Shuffle using the Fisher-Yates method, a shuffle proven to be the most efficient in both time (runs in O(n)) and memory (runs in-place with only one extra "swap" variable).
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            int selectedElement = Random.Range(i, pieces.Length);
+            BagPiece swap = bag[selectedElement];
+            bag[selectedElement] = bag[i];
+            bag[i] = swap;
+        }
+        AddBag(bag);
+    }
+
+    // A function to make the conditionals in BuildCursedBag cleaner.
     public bool IsCurseActiveThisBag(int[] bagCurses, Curse curse)
     {
         return bagCurses[0] >= 0 && (bagCurses[(int)curse] > 0 || PersistantVars.pVars.forcedCurses[(int)curse]); //If notSerenity and (curseActive or curseForcedActive)
@@ -413,4 +460,13 @@ public class Queue : MonoBehaviour
         }
         ref_IncomingGarbageText.text = text;
     }
+}
+
+public enum BagType
+{
+    CURSED, //Standard 7-bag plus whatever curses are active. Note that only the CURSED AddBag function actually makes a call to CurseManager to generate curses. If any other bag type is used, that implicitly means a mode without main-game curse generation.
+    TETRA, //Standard 7-bag only.
+    PENTA, //Pentominoes only. Bags of 18 with one of each pentomino.
+    PSEUDO, //Tetrominoes and pseudo-tetrominoes. Bags of 41, consisting of one of each pseudo-tetromino and two of each normal tetromino.
+    CUSTOMBAG //User-defined bag.
 }

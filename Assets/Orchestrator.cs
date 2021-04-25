@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Diagnostics;
 
 /* Orchestrator class
  * This class is intended to serve these main purposes:
@@ -53,16 +54,29 @@ public class Orchestrator : MonoBehaviour
     public Text ref_SlipperyText;
     public Text ref_ClumpedText;
     public Text ref_ScoreInfoText;
+    public Text ref_SprintLinesLeftText;
     //Various """global""" variables
-    public float gravity = 1.0f; //Gravity is the rate at which the active piece falls, measured in minoes per second. "Instant" ("20G") gravity is at least 11000 under default board height.
-    public float partialFallProgress = 0.0f; //This is what fraction of a mino the active piece has already fallen. Once this exceeds 1, the active piece falls by 1 and this decrements by 1.
+    public float gravity; //Gravity is the rate at which the active piece falls, measured in minoes per second. "Instant" ("20G") gravity is at least 11000 under default board height.
+    public float partialFallProgress; //This is what fraction of a mino the active piece has already fallen. Once this exceeds 1, the active piece falls by 1 and this decrements by 1.
     public long score; //The player's score, of course.
     public int combo; //The number (minus 1, because convention) of consecutive pieces which have cleared a line.
     public int backToBack; //The number (minus 1) of consecutive "Power Clears". Clearing at least one line with a T-spin (mini or full), or clearing at least four lines with a single piece, will each increment B2B. Clearing one, two, or three lines with a single piece without a T-spin resets B2B to -1.
     public int bagNumber; //How many bags have we been through? Which one are we in the middle of?
-    public int scoreMultiplier; //All score gain is multiplied by this. It goes up every bag and is also increased for each active curse. (Note that harddrop and softdrop is multiplied instead by a constant.)
+    public int scoreMultiplier; //All score gain is multiplied by this. It goes up every bag and is also increased for each active curse. (Note that harddrop and softdrop is multiplied instead by a constant.) //scoreMultiplier also doubles as level in marathon modes.
+    public int softDropPointsThisPiece; //In order to prevent the player from scoring an arbitrarily high number of points by abusing upwards kicks and soft drop, there is a cap on the number of points that can be scored per piece. The value of that cap is in a const.
     public bool gameover; //Is the game in a finished state?
     public bool paused; //Is the game paused?
+    public bool firstInputMade; //Has the player made any inputs yet? If not, the game hasn't "started" yet.
+    public int linesCleared; //How many lines have been cleared so far? Tracked in all modes, but only functionally relevant in sprint and marathon modes
+    public int sprintGoal; //In a sprint mode, the number of lines to clear. Functionally irrelevant in all other modes.
+    public TimeSpan ultraTimeLimit; //In an ultra mode, the amount of time available to the player (in which to score as high as possible). Functionally irrelevant in all other modes.
+    public int linesPerLevel; //In a marathon mode, how many lines must the player clear to level up? Functionally irrelevant in all other modes.
+    public int maxLevel; //In a marathon mode, what is the max level? Exceeding this level immedaitely ends the game in success. Functionally irrelevant in all other modes.
+    public int allClears; //How many all clears have been made? Only functionally relevant in allclear modes.
+    public int piecesPlacedSinceLastAllClear; //How many pieces have been used since the last all clear? Only functionally relevant in allclear modes to detect game over; you must score each allclear in no more pieces than the board width.
+    public Stopwatch gameTimer; //The total time elapsed in the current game, starting from the first input and stopping at game over.
+    //I was initially unsure as to whether I should keep time by counting FixedUpdates or by measuring real time. I decided to use real time because that is significantly harder to "fake".
+    // FixedUpdates might occur slower on a very slow machine, or on a machine running many programs at once. The system clock, however, runs independantly of my code.
     //Score tuning variables
     public int softDropScoreGain; //The number of points gained for each space the active piece falls while soft-dropped.
     public int hardDropScoreGain; //The number of points gained for each space the active piece falls while hard-dropped.
@@ -91,8 +105,16 @@ public class Orchestrator : MonoBehaviour
     public int holdDCD;
     public bool resetDASOnDirChange; //If enabled, resets one direction's DAS timer if the other direction is pressed or released.
     public bool mirrorMonominoRotation; //If enabled, the direction that monominoes "teleport" is mirrored. Normally CW goes right and CCW goes left, but if this is enabled (set to true), CW goes left and CCW goes right.
+    public const float DEFAULT_GRAVITY = 1.0f;
     public const int BASE_SCORE_MULTIPLIER = 20;
     public const int DROP_SCORE_MULTIPLIER = 21;
+    public const int MAXIMUM_SOFT_DROP_POINTS_PER_PIECE = 25; //In order to prevent the player from scoring an arbitrarily high number of points by abusing upwards kicks and soft drop, there is a cap on the number of points that can be scored per piece.
+    public const float CLEAR_TYPE_TIMER_LENGTH = 2.0f; //Time (in seconds) for clear type text to stay on screen.
+    public const float FULL_CLEAR_TIMER_LENGTH = 3.0f; //Time (in seconds) for full clear text to stay on screen.
+    public const int DEFAULT_SPRINT_GOAL = 40;
+    public const int DEFAULT_MARATHON_LINES_PER_LEVEL = 10;
+    public const int DEFAULT_MARATHON_MAX_LEVEL = 15;
+    public readonly TimeSpan DEFAULT_ULTRA_TIME_LIMIT = new TimeSpan(0, 2, 0); //Two minutes.
 
     public readonly string[] CLEAR_NAMES = new string[] { "", "Single", "Double", "Triple", "Quadruple", "Pentuple", "Sextuple", "Septuple", "Octuple", "WHAT?", "HOW?", "CHEATER?", "HACKER?" };
     public const string T_SPIN_MINI_TEXT = "T-spin mini";
@@ -102,14 +124,13 @@ public class Orchestrator : MonoBehaviour
     public const string COMBO_TEXT = "Combo: ";
     public const string BACK_TO_BACK_TEXT = "Back-to-Back x";
     public const string GAME_OVER_TEXT = "GAME OVER\nPRESS {0} TO RESET";
+    public const string GAME_COMPLETE_TEXT = "FINISHED!\nPRESS {0} TO RESET";
     public const string PAUSED_TEXT = "PAUSED\nPRESS {0} TO RESUME";
     public const string ANTISKIM_TEXT = "Avoid Singles";
     public const string ANTIGRAV_TEXT = "Antigrav";
     public const string SLOW_HOLD_TEXT = "Slow hold";
     public const string SLIPPERY_TEXT = "Slippery";
     public const string CLUMPED_TEXT = "Clumped";
-    public const float CLEAR_TYPE_TIMER_LENGTH = 2.0f; //Time (in seconds) for clear type text to stay on screen.
-    public const float FULL_CLEAR_TIMER_LENGTH = 3.0f; //Time (in seconds) for full clear text to stay on screen.
 
     // Start is called before the first frame update
     void Start()
@@ -117,8 +138,8 @@ public class Orchestrator : MonoBehaviour
         //Load mino textures.
         minoSprites = Resources.LoadAll<Sprite>("MinoTextures");
         //Initialize game variables
-        softDropScoreGain = 1; //TODO: Set by mode
-        hardDropScoreGain = 2; //TODO: Set by mode
+        softDropScoreGain = 1;
+        hardDropScoreGain = 2;
         lineClearScoreGain = new int[] { 0, 100, 300, 500, 800, 1200, 1800, 2700, 4000, 6000, 9000, 15000, 25000 }; //A few extra entries just to protect against out-of-bounds errors. Hopefully. Only up to index 8 should be needed.
         tSpinScoreGain = new int[] { 400, 800, 1200, 1600, 2400, 3600, 5400, 9000, 15000, 25000 }; //Only up to index 6 should be necessary, but see above.
         tSpinMiniScoreGain = new int[] { 100, 200, 1200, 1600, 2400, 3600, 5400, 9000, 15000, 25000 }; //Again, see above. Only up to index 1 should ever be used.
@@ -131,12 +152,24 @@ public class Orchestrator : MonoBehaviour
         {
             CreatePlayerPrefs();
         }
-        softDropGravity = PlayerPrefs.GetFloat("SDG");
-        das = PlayerPrefs.GetInt("DAS");
-        arr = PlayerPrefs.GetInt("ARR");
-        rotateDCD = PlayerPrefs.GetInt("rotateDCD");
-        harddropDCD = PlayerPrefs.GetInt("harddropDCD");
-        holdDCD = PlayerPrefs.GetInt("holdDCD");
+        if (PersistantVars.pVars.overtuned)
+        {
+            softDropGravity = 20000f;
+            das = 0;
+            arr = 0;
+            rotateDCD = 0;
+            harddropDCD = 0;
+            holdDCD = 0;
+        }
+        else
+        {
+            softDropGravity = PlayerPrefs.GetFloat("SDG");
+            das = PlayerPrefs.GetInt("DAS");
+            arr = PlayerPrefs.GetInt("ARR");
+            rotateDCD = PlayerPrefs.GetInt("rotateDCD");
+            harddropDCD = PlayerPrefs.GetInt("harddropDCD");
+            holdDCD = PlayerPrefs.GetInt("holdDCD");
+        }
         resetDASOnDirChange = (PlayerPrefs.GetInt("interruptDAS") == 1); //A somewhat odd way of typcasting an int to a bool...
         mirrorMonominoRotation = (PlayerPrefs.GetInt("mirrorMono") == 1);
         //User keybind settings
@@ -170,6 +203,7 @@ public class Orchestrator : MonoBehaviour
         {
             HandleDAS();
             HandleGravity();
+            CheckForGoal();
         }
     }
 
@@ -177,13 +211,25 @@ public class Orchestrator : MonoBehaviour
     public void ResetObject()
     {
         //Game variables
+        gravity = DEFAULT_GRAVITY;
+        partialFallProgress = 0.0f;
         score = 0;
         combo = -1;
         backToBack = -1;
         bagNumber = 1;
         scoreMultiplier = 21;
+        softDropPointsThisPiece = 0;
         gameover = false;
         paused = false;
+        firstInputMade = false;
+        linesCleared = 0;
+        sprintGoal = DEFAULT_SPRINT_GOAL;
+        ultraTimeLimit = DEFAULT_ULTRA_TIME_LIMIT;
+        linesPerLevel = DEFAULT_MARATHON_LINES_PER_LEVEL;
+        maxLevel = DEFAULT_MARATHON_MAX_LEVEL;
+        allClears = 0;
+        piecesPlacedSinceLastAllClear = 0;
+        gameTimer = new Stopwatch();
         //Clear text fields
         ref_ComboText.text = "";
         ref_ClearTypeText.text = "";
@@ -201,6 +247,10 @@ public class Orchestrator : MonoBehaviour
         moveLeftHeld = false;
         moveRightHeld = false;
         moveLeftMostRecent = false;
+        if (PersistantVars.pVars.goal == ModeGoal.SPRINT)
+        {
+            ref_SprintLinesLeftText.gameObject.SetActive(true);
+        }
     }
 
     //This method creates a new PlayerPrefs to use with default settings.
@@ -316,6 +366,10 @@ public class Orchestrator : MonoBehaviour
             {
                 distanceToFall = softDropGravity * Time.fixedDeltaTime;
             }
+            else if (!firstInputMade) //Gravity should not occur until the game "starts". The game starts once the player makes any input.
+            {
+                distanceToFall = 0;
+            }
             else
             {
                 distanceToFall = gravity * Time.fixedDeltaTime;
@@ -329,7 +383,11 @@ public class Orchestrator : MonoBehaviour
                 partialFallProgress -= 1.0f;
                 if (softDropHeld)
                 {
-                    score += softDropScoreGain * DROP_SCORE_MULTIPLIER;
+                    if (softDropPointsThisPiece < MAXIMUM_SOFT_DROP_POINTS_PER_PIECE)
+                    {
+                        score += softDropScoreGain * DropScoreMultiplier();
+                        softDropPointsThisPiece++;
+                    }
                 }
             }
         }
@@ -381,6 +439,46 @@ public class Orchestrator : MonoBehaviour
         {
             ref_B2BText.text = BACK_TO_BACK_TEXT + backToBack;
         }
+        //In sprint, marathon, and ultra, the timer is relevant, so it must be updated every frame. It's a little less relevant in PC modes, but I still show it anyway because why not?
+        if (PersistantVars.pVars.goal == ModeGoal.SPRINT)
+        {
+            TimeSpan ts = gameTimer.Elapsed;
+            string elapsedTime = string.Format("{0:00}:{1:00}.{2:000}", Math.Floor(ts.TotalMinutes), ts.Seconds, ts.Milliseconds);
+            string infoText = $"Lines: {linesCleared}/{sprintGoal}\nTime: {elapsedTime}";
+            ref_ScoreInfoText.text = infoText;
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.ULTRA) //Ultra needs to show time REMAINING instead of ELAPSED, so it needs different behavior.
+        {
+            TimeSpan ts = ultraTimeLimit - gameTimer.Elapsed;
+            if (ts < TimeSpan.Zero)
+            {
+                ts = TimeSpan.Zero; //This is done to prevent negative times from being shown.
+            }
+            string remainingTime = string.Format("{0:00}:{1:00}.{2:000}", Math.Floor(ts.TotalMinutes), ts.Seconds, ts.Milliseconds);
+            string infoText = $"Time: {remainingTime}";
+            ref_ScoreInfoText.text = infoText;
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.MARATHON)
+        {
+            TimeSpan ts = gameTimer.Elapsed;
+            string elapsedTime = string.Format("{0:00}:{1:00}.{2:000}", Math.Floor(ts.TotalMinutes), ts.Seconds, ts.Milliseconds);
+            int maxLines = maxLevel * linesPerLevel;
+            string infoText = $"Lines: {linesCleared}/{maxLines}\nLevel: {scoreMultiplier}\nTime: {elapsedTime}";
+            ref_ScoreInfoText.text = infoText;
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.ALLCLEAR)
+        {
+            TimeSpan ts = gameTimer.Elapsed;
+            string elapsedTime = string.Format("{0:00}:{1:00}.{2:000}", Math.Floor(ts.TotalMinutes), ts.Seconds, ts.Milliseconds);
+            string infoText = $"All clears: {allClears}\nTime: {elapsedTime}";
+            ref_ScoreInfoText.text = infoText;
+        }
+        //In Sprint, handle the lines-left overlay text
+        if (PersistantVars.pVars.goal == ModeGoal.SPRINT)
+        {
+            int linesLeft = sprintGoal - linesCleared;
+            ref_SprintLinesLeftText.text = linesLeft.ToString();
+        }
     }
 
     //This method sets the text and timers for Clear Type and Full Clear text. It is called from ActivePiece.LockPiece().
@@ -424,8 +522,18 @@ public class Orchestrator : MonoBehaviour
     public void GameOver()
     {
         gameover = true;
+        gameTimer.Stop();
         string resetKeybind = gameObject.GetComponent<PlayerInput>().actions.FindAction("Reset").GetBindingDisplayString(); //Determine reset keybind so it can be displayed.
         ref_GameoverText.text = string.Format(GAME_OVER_TEXT, resetKeybind);
+    }
+
+    //This method is called when the current mode has been finished successfully. It's similar to GameOver but with a kinder message.
+    public void GameComplete()
+    {
+        gameover = true;
+        gameTimer.Stop();
+        string resetKeybind = gameObject.GetComponent<PlayerInput>().actions.FindAction("Reset").GetBindingDisplayString(); //Determine reset keybind so it can be displayed.
+        ref_GameoverText.text = string.Format(GAME_COMPLETE_TEXT, resetKeybind);
     }
 
     //The next several functions, named "On[something]", are input-handling functions, invoked by the Player Input component.
@@ -438,6 +546,7 @@ public class Orchestrator : MonoBehaviour
         }
         if (context.phase == InputActionPhase.Started)
         {
+            SetFirstInputMade();
             if (ref_ActivePiece.CanPieceMove(Vector2Int.left)) //Move the piece if possible.
             {
                 ref_ActivePiece.MovePiece(Vector2Int.left);
@@ -471,6 +580,7 @@ public class Orchestrator : MonoBehaviour
         }
         if (context.phase == InputActionPhase.Started)
         {
+            SetFirstInputMade();
             if (ref_ActivePiece.CanPieceMove(Vector2Int.right))
             {
                 ref_ActivePiece.MovePiece(Vector2Int.right);
@@ -502,6 +612,7 @@ public class Orchestrator : MonoBehaviour
         }
         if (context.phase == InputActionPhase.Started)
         {
+            SetFirstInputMade();
             softDropHeld = true;
         }
         else if (context.phase == InputActionPhase.Canceled)
@@ -518,6 +629,7 @@ public class Orchestrator : MonoBehaviour
         }
         if (context.phase == InputActionPhase.Started)
         {
+            SetFirstInputMade();
             ref_ActivePiece.HardDrop();
             ref_ActivePiece.LockPiece();
             if (moveLeftHeld)
@@ -539,6 +651,7 @@ public class Orchestrator : MonoBehaviour
         }
         if (context.phase == InputActionPhase.Started)
         {
+            SetFirstInputMade();
             Vector2Int kick = ref_ActivePiece.CheckKicktable(RotState.CWI); //Check for the first valid kick.
             if (kick.x != -9999) //Stop if the kick is invalid.
             {
@@ -564,6 +677,7 @@ public class Orchestrator : MonoBehaviour
         }
         if (context.phase == InputActionPhase.Started)
         {
+            SetFirstInputMade();
             Vector2Int kick = ref_ActivePiece.CheckKicktable(RotState.CCW); //Check for the first valid kick.
             if (kick.x != -9999) //Stop if the kick is invalid.
             {
@@ -589,6 +703,7 @@ public class Orchestrator : MonoBehaviour
         }
         if (context.phase == InputActionPhase.Started)
         {
+            SetFirstInputMade();
             Vector2Int kick = ref_ActivePiece.CheckKicktable(RotState.TWO); //Check for the first valid kick.
             if (kick.x != -9999) //Stop if the kick is invalid.
             {
@@ -614,6 +729,7 @@ public class Orchestrator : MonoBehaviour
         }
         if (context.phase == InputActionPhase.Started)
         {
+            SetFirstInputMade();
             ref_HoldPiece.HoldPieceAction(ref_ActivePiece.piecePrototype);
             if (moveLeftHeld)
             {
@@ -645,7 +761,7 @@ public class Orchestrator : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
-            if (!paused) //This whole thing could be condensed down to "paused = !paused" and etc., but this is much clearer.
+            if (!paused)
             {
                 paused = true;
                 ref_BoardContainer.SetActive(false);
@@ -670,6 +786,13 @@ public class Orchestrator : MonoBehaviour
         }
     }
 
+    //This method is called by most On[Input] methods. It sets firstInputMade to true and starts the game timer.
+    public void SetFirstInputMade()
+    {
+        firstInputMade = true;
+        gameTimer.Start();
+    }
+
     //This method spawns a new piece from the front of the queue, and makes the queue and incoming piece update as well.
     public void SpawnNextPiece()
     {
@@ -680,7 +803,11 @@ public class Orchestrator : MonoBehaviour
 
     //This method spawns a new piece (by calling ActivePiece.SpawnPiece()) and handles everything else that needs to occur "between" pieces.
     public void SpawnPiece(BagPiece piece, bool wasHeld)
-    {        
+    {
+        if (PersistantVars.pVars.goal == ModeGoal.MARATHON)
+        {
+            UpdateMarathonLevelAndGravity();
+        }
         //If this bag is empty, and the piece came from the next queue, generate the next bag.
         if (piece.HasProperty(BagPiece.LAST_IN_BAG) && !wasHeld)
         {
@@ -699,6 +826,7 @@ public class Orchestrator : MonoBehaviour
             ref_HoldPiece.UpdateDisplay(); //Hold piece needs to be updated in case the texture needs to be changed to reflect hold cooldown.
         }
         partialFallProgress = 1.0f; //According to guideline, a newly-spawning piece immediately falls by one mino if it is able. This implements that behavior.
+        softDropPointsThisPiece = 0;
         ref_Queue.UpdateIncomingGarbageDisplay(); //This needs to be updated every piece.
         //Handle Ephemereal Hold curse; if active, increase the ephemeral hold count, and if it's high enough, remove the hold piece.
         if (ref_CurseManager.IsCurseActive(Curse.EPHEMEREAL_HOLD) && !wasHeld)
@@ -721,12 +849,77 @@ public class Orchestrator : MonoBehaviour
         ref_HoldPiece.UpdateEphemerealDisplay();
     }
 
+    //This method, called on every FixedUpdate, checks to see if the goal of the mode being played has been reached.
+    public void CheckForGoal()
+    {
+        if (PersistantVars.pVars.goal == ModeGoal.SPRINT)
+        {
+            if (linesCleared >= sprintGoal)
+            {
+                GameComplete();
+            }
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.ULTRA)
+        {
+            if (gameTimer.Elapsed >= ultraTimeLimit)
+            {
+                GameComplete();
+            }
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.MARATHON)
+        {
+            if (scoreMultiplier > maxLevel)
+            {
+                GameComplete();
+            }
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.ALLCLEAR)
+        {
+            if (piecesPlacedSinceLastAllClear >= ref_Board.width)
+            {
+                GameComplete();
+            }
+        }
+    }
+
     //This method determines what the current score multiplier is and updates the display accordingly.
     public void UpdateScoreMultiplier()
     {
-        int curseBonus = ref_CurseManager.CurrentCurseLevel();
-        scoreMultiplier = BASE_SCORE_MULTIPLIER + bagNumber + curseBonus;
-        ref_ScoreInfoText.text = "Bag " + bagNumber + "\nCurse LV " + curseBonus + "\nScore multiplier " + scoreMultiplier;
+        if (PersistantVars.pVars.goal == ModeGoal.SURVIVE)
+        {
+            int curseBonus = ref_CurseManager.CurrentCurseLevel();
+            scoreMultiplier = BASE_SCORE_MULTIPLIER + bagNumber + curseBonus;
+            ref_ScoreInfoText.text = "Bag " + bagNumber + "\nCurse LV " + curseBonus + "\nScore multiplier " + scoreMultiplier;
+        }
+        /*else if (PersistantVars.pVars.goal == ModeGoal.MARATHON)
+        {
+            //Note that scoreMultiplier doubles as level in marathon modes. Even so, scoreMultipler is still a multiplier applied to points scored (excluding softdrops and harddrops).
+            scoreMultiplier = 1 + (linesCleared / linesPerLevel);
+            gravity = GravityForLevel(scoreMultiplier);
+        }*/ //Due to timing issues, this bit has been broken off into its own function.
+        else if (PersistantVars.pVars.goal == ModeGoal.SPRINT || PersistantVars.pVars.goal == ModeGoal.ULTRA || PersistantVars.pVars.goal == ModeGoal.ALLCLEAR)
+        {
+            scoreMultiplier = 1;
+        }
+    }
+
+    public void UpdateMarathonLevelAndGravity()
+    {
+        //Note that scoreMultiplier doubles as level in marathon modes. Even so, scoreMultipler is still a multiplier applied to points scored (excluding softdrops and harddrops).
+        scoreMultiplier = 1 + (linesCleared / linesPerLevel);
+        gravity = GravityForLevel(scoreMultiplier);
+    }
+
+    public int DropScoreMultiplier()
+    {
+        if (PersistantVars.pVars.goal == ModeGoal.SURVIVE)
+        {
+            return DROP_SCORE_MULTIPLIER;
+        }
+        else
+        {
+            return 1;
+        }
     }
 
     //Several curses have a specific on-screen visual to indicate they are active. This method shows or hides them as appropriate.
@@ -774,4 +967,24 @@ public class Orchestrator : MonoBehaviour
             ref_ClumpedText.text = "";
         }
     }
+
+    public float GravityForLevel(int level)
+    {
+        if (level >= 25)
+        {
+            return 999999; //The standard gravity formula stops behaving well after a sufficiently high level (namely 116). Everything from 25 to that point is effectively 20G anyway.
+        }
+        float secondsPerMino = (float)Math.Pow((0.8 - ((level - 1) * 0.007)), (level - 1));
+        return 1 / secondsPerMino;
+    }
+}
+
+//Enumerator for overall mode types, defined by their goal.
+public enum ModeGoal
+{
+    SURVIVE, //Score as high as possible before game over. Used by the main game mode.
+    SPRINT, //Clear X (typically 40) lines as fast as possible.
+    ULTRA, //Score as many points as possible in X time (typically 2 minutes).
+    MARATHON, //Score as many points as possible by the time you clear X lines (typically 150), with the gravity increasing every Y lines (typically 10).
+    ALLCLEAR //Make as many consecutive all clears as possible. 
 }

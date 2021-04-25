@@ -29,6 +29,10 @@ public class DifficultySelectInput : MonoBehaviour
 
     public void StartGame()
     {
+        PersistantVars.pVars.goal = ModeGoal.SURVIVE;
+        PersistantVars.pVars.bagType = BagType.CURSED;
+        PersistantVars.pVars.width = 10;
+        PersistantVars.pVars.overtuned = false;
         SceneManager.LoadScene("MainGameScene");
     }
 }

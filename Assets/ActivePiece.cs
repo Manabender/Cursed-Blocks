@@ -174,7 +174,7 @@ public class ActivePiece : Piece
         while (CanPieceMove(Vector2Int.down))
         {
             MovePiece(Vector2Int.down);
-            ref_Orchestrator.score += ref_Orchestrator.hardDropScoreGain * Orchestrator.DROP_SCORE_MULTIPLIER; //Award points for each cell dropped
+            ref_Orchestrator.score += ref_Orchestrator.hardDropScoreGain * ref_Orchestrator.DropScoreMultiplier(); //Award points for each cell dropped
         }
     }
 
@@ -274,19 +274,22 @@ public class ActivePiece : Piece
             ref_Orchestrator.combo = -1; //No lines were cleared, reset combo.
         }
 
-        int fullClear = 0;
         //Check for full clears
-        if (linesCleared >= 1) //No need to bother if nothing was cleared
+        int fullClear = ref_Orchestrator.ref_Board.CheckFullClears();
+        if (fullClear == 2)
         {
-            fullClear = ref_Orchestrator.ref_Board.CheckFullClears();
-            if (fullClear == 2)
-            {
-                ref_Orchestrator.score += ref_Orchestrator.allClearScoreGain * ref_Orchestrator.scoreMultiplier;
-            }
-            else if (fullClear == 1)
-            {
-                ref_Orchestrator.score += ref_Orchestrator.colorClearScoreGain * ref_Orchestrator.scoreMultiplier;
-            }
+            ref_Orchestrator.score += ref_Orchestrator.allClearScoreGain * ref_Orchestrator.scoreMultiplier;
+            //Update allclear count. Only relevant in allclear modes.
+            ref_Orchestrator.allClears++;
+            ref_Orchestrator.piecesPlacedSinceLastAllClear = 0;
+        }
+        else if (fullClear == 1)
+        {
+            ref_Orchestrator.score += ref_Orchestrator.colorClearScoreGain * ref_Orchestrator.scoreMultiplier;
+        }
+        else
+        {
+            ref_Orchestrator.piecesPlacedSinceLastAllClear++;
         }
 
         //Tell Orchestrator to update relevant text fields.
@@ -464,7 +467,7 @@ public class ActivePiece : Piece
             //Debug.Log("Full spin because last rotate was super");
             return 2;
         }
-        //Does frost2point check pass? If yes, full spin.
+        //Does froNt2point check pass? If yes, full spin.
         if (cornerTest == 2)
         {
             //Debug.Log("Full spin because front corner test passed");

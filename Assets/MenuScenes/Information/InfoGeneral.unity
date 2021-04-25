@@ -5360,10 +5360,10 @@ RectTransform:
   m_Father: {fileID: 783923842}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 7.5, y: 1.5}
-  m_SizeDelta: {x: -31, y: 3}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 7, y: 1}
+  m_SizeDelta: {x: 129, y: 23}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1141252039
 MonoBehaviour:
@@ -8677,7 +8677,11 @@ MonoBehaviour:
     CLv
     is the total current curse level. Each curse has a "level" roughly proportional
     to how difficult it is to deal with, and the total current curse level is the
-    sum of all active curses'' levels.'
+    sum of all active curses'' levels.
+
+
+    "Ultra" modes use a constant multiplier
+    of 1, and "Marathon" modes use a multiplier equal to the current level.'
 --- !u!222 &1801030505
 CanvasRenderer:
   m_ObjectHideFlags: 0
