@@ -27,8 +27,14 @@ public class DifficultySelectInput : MonoBehaviour
         StartGame();
     }
 
+    public void OnHover()
+    {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
+    }
+
     public void StartGame()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         PersistantVars.pVars.goal = ModeGoal.SURVIVE;
         PersistantVars.pVars.bagType = BagType.CURSED;
         PersistantVars.pVars.width = 10;

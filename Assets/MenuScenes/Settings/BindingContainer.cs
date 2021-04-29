@@ -24,6 +24,7 @@ public class BindingContainer : MonoBehaviour
     //When the button is clicked, rebind it.
     public void OnClick()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         InputAction actionRef = map.actions[myIndex];
 
         rebindingOperation = actionRef.PerformInteractiveRebinding()
@@ -39,5 +40,11 @@ public class BindingContainer : MonoBehaviour
         rebindingOperation.Dispose();
 
         bindingValue.text = map.actions[myIndex].bindings[0].ToDisplayString();
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
     }    
+
+    public void OnHover()
+    {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
+    }
 }

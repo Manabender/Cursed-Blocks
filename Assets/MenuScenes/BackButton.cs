@@ -13,6 +13,12 @@ public class BackButton : MonoBehaviour
 
     public void OnClick()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_BACK);
         SceneManager.LoadScene(sceneToLoad);
+    }
+
+    public void OnHover()
+    {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
     }
 }

@@ -114,7 +114,12 @@ public class ActivePiece : Piece
         }
 
         //Update locking value; piece is locking if it cannot move down.
+        bool wasLocking = locking;
         locking = !CanPieceMove(Vector2Int.down);
+        if (locking && !wasLocking && !ref_Orchestrator.hardDropping)
+        {
+            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_LAND);
+        }
         //Reset lock delay.
         lockDelayTimer = baseLockDelay;
     }
@@ -182,8 +187,14 @@ public class ActivePiece : Piece
     {
         lockDelayTimer--;
         finalLockTimer--;
-        if (lockDelayTimer <= 0 || finalLockTimer <= 0)
+        if (lockDelayTimer <= 0)
         {
+            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_LOCK_DELAY_EXPIRED);
+            LockPiece();
+        }
+        else if (finalLockTimer <= 0)
+        {
+            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_LOCK_FORCED);
             LockPiece();
         }
     }
@@ -202,6 +213,7 @@ public class ActivePiece : Piece
             {
                 MovePiece(Vector2Int.right);
             }
+            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_INITIAL_ROTATION);
             while (CanPieceMove(Vector2Int.down))
             {
                 MovePiece(Vector2Int.down);
@@ -254,6 +266,7 @@ public class ActivePiece : Piece
         //Add B2B bonus if necessary.
         if (linesCleared >= 1 && ref_Orchestrator.backToBack >= 1)
         {
+            PersistantVars.pVars.PlaySound(SoundEffects.B2B);
             scoreGain = scoreGain * 3 / 2;
         }
 
@@ -268,6 +281,7 @@ public class ActivePiece : Piece
         {
             ref_Orchestrator.combo++;
             ref_Orchestrator.score += (ref_Orchestrator.comboScoreGain * ref_Orchestrator.combo * ref_Orchestrator.scoreMultiplier); //Award points for combo.
+            PlayComboSound();
         }
         else
         {
@@ -319,6 +333,33 @@ public class ActivePiece : Piece
         //Spawn the next piece.
         ref_Orchestrator.SpawnNextPiece();
         //SpawnPiece(Random.Range(0, 7)); //Used for testing purposes.
+    }
+
+    //I expanded this out into this obviously-repetitive list in order to avoid typecasting from SoundEffects to int back to SoundEffects. That could be done to condense the entire function to a couple lines, but this is much clearer.
+    public void PlayComboSound()
+    {
+        if (ref_Orchestrator.combo == 0) { return; }
+        else if (ref_Orchestrator.combo == 1) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO1); }
+        else if (ref_Orchestrator.combo == 2) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO2); }
+        else if (ref_Orchestrator.combo == 3) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO3); }
+        else if (ref_Orchestrator.combo == 4) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO4); }
+        else if (ref_Orchestrator.combo == 5) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO5); }
+        else if (ref_Orchestrator.combo == 6) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO6); }
+        else if (ref_Orchestrator.combo == 7) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO7); }
+        else if (ref_Orchestrator.combo == 8) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO8); }
+        else if (ref_Orchestrator.combo == 9) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO9); }
+        else if (ref_Orchestrator.combo == 10) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO10); }
+        else if (ref_Orchestrator.combo == 11) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO11); }
+        else if (ref_Orchestrator.combo == 12) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO12); }
+        else if (ref_Orchestrator.combo == 13) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO13); }
+        else if (ref_Orchestrator.combo == 14) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO14); }
+        else if (ref_Orchestrator.combo == 15) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO15); }
+        else if (ref_Orchestrator.combo == 16) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO16); }
+        else if (ref_Orchestrator.combo == 17) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO17); }
+        else if (ref_Orchestrator.combo == 18) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO18); }
+        else if (ref_Orchestrator.combo == 19) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO19); }
+        else if (ref_Orchestrator.combo >= 20) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO20); }
+
     }
 
     //This method, named MovePiece, moves the piece. Simple names are the best names.

@@ -116,6 +116,7 @@ public class Board : MonoBehaviour
         {
             cells[hole, 0] = 0;
         }
+        PersistantVars.pVars.PlaySound(SoundEffects.GARBAGE_SPAWN);
     }
 
     public void AddCleanGarbage()
@@ -237,6 +238,7 @@ public class Board : MonoBehaviour
         //Mirror: Mirrors the board across the y axis.
         if (ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.MIRROR))
         {
+            PersistantVars.pVars.PlaySound(SoundEffects.PACE_GAINED);
             for (int y = 0; y < absoluteHeight; y++)
             {
                 for (int x = 0; x < width / 2; x++) //If width is odd, this should correctly skip the middle column.
@@ -271,7 +273,24 @@ public class Board : MonoBehaviour
 
         ref_Orchestrator.linesCleared += scoringLinesCleared;
 
+        PlayLineClearSound(scoringLinesCleared + (100 * spinCheckValue));
+
         return scoringLinesCleared + (100 * spinCheckValue);
+    }
+
+    public void PlayLineClearSound(int clear)
+    {
+        if (clear == 0) { return; }
+        else if (clear == 1){PersistantVars.pVars.PlaySound(SoundEffects.LINE_CLEAR1);}
+        else if (clear == 2) { PersistantVars.pVars.PlaySound(SoundEffects.LINE_CLEAR2); }
+        else if (clear == 3) { PersistantVars.pVars.PlaySound(SoundEffects.LINE_CLEAR3); }
+        else if (clear >= 4 && clear < 100) { PersistantVars.pVars.PlaySound(SoundEffects.LINE_CLEAR4); }
+        else if (clear == 100) { PersistantVars.pVars.PlaySound(SoundEffects.T_SPIN_MINI0); }
+        else if (clear == 101) { PersistantVars.pVars.PlaySound(SoundEffects.T_SPIN_MINI1); }
+        else if (clear == 200) { PersistantVars.pVars.PlaySound(SoundEffects.T_SPIN0); }
+        else if (clear == 201) { PersistantVars.pVars.PlaySound(SoundEffects.T_SPIN1); }
+        else if (clear == 202) { PersistantVars.pVars.PlaySound(SoundEffects.T_SPIN2); }
+        else if (clear >= 203) { PersistantVars.pVars.PlaySound(SoundEffects.T_SPIN3); }
     }
 
     //This is step 1 of the ClearLines method. This finds out how many full lines there are.
@@ -377,10 +396,12 @@ public class Board : MonoBehaviour
         }
         if (allClear)
         {
+            PersistantVars.pVars.PlaySound(SoundEffects.PERFECT_CLEAR);
             return 2;
         }
         else
         {
+            PersistantVars.pVars.PlaySound(SoundEffects.PERFECT_CLEAR);
             return 1;
         }
     }

@@ -40,6 +40,7 @@ public class Orchestrator : MonoBehaviour
     public GameObject ref_BoardContainer;
     public GameObject ref_PauseTextObject;
     public Text ref_PauseText;
+    public Text ref_PauseToViewDetailsText;
     public Text ref_ScoreDisplay;
     public Text ref_ComboText;
     public Text ref_ClearTypeText;
@@ -55,6 +56,7 @@ public class Orchestrator : MonoBehaviour
     public Text ref_ClumpedText;
     public Text ref_ScoreInfoText;
     public Text ref_SprintLinesLeftText;
+    public Text ref_CursesActiveDetailsText;
     //Various """global""" variables
     public float gravity; //Gravity is the rate at which the active piece falls, measured in minoes per second. "Instant" ("20G") gravity is at least 11000 under default board height.
     public float partialFallProgress; //This is what fraction of a mino the active piece has already fallen. Once this exceeds 1, the active piece falls by 1 and this decrements by 1.
@@ -67,6 +69,7 @@ public class Orchestrator : MonoBehaviour
     public bool gameover; //Is the game in a finished state?
     public bool paused; //Is the game paused?
     public bool firstInputMade; //Has the player made any inputs yet? If not, the game hasn't "started" yet.
+    public bool hardDropping; //Used to prevent "piece land" sound effect from playing on hard drop.
     public int linesCleared; //How many lines have been cleared so far? Tracked in all modes, but only functionally relevant in sprint and marathon modes
     public int sprintGoal; //In a sprint mode, the number of lines to clear. Functionally irrelevant in all other modes.
     public TimeSpan ultraTimeLimit; //In an ultra mode, the amount of time available to the player (in which to score as high as possible). Functionally irrelevant in all other modes.
@@ -126,6 +129,7 @@ public class Orchestrator : MonoBehaviour
     public const string GAME_OVER_TEXT = "GAME OVER\nPRESS {0} TO RESET";
     public const string GAME_COMPLETE_TEXT = "FINISHED!\nPRESS {0} TO RESET";
     public const string PAUSED_TEXT = "PAUSED\nPRESS {0} TO RESUME";
+    public const string PAUSE_TO_VIEW_DETAILS_TEXT = "Pause [{0}] any time to view details on active curses.";
     public const string ANTISKIM_TEXT = "Avoid Singles";
     public const string ANTIGRAV_TEXT = "Antigrav";
     public const string SLOW_HOLD_TEXT = "Slow hold";
@@ -222,6 +226,7 @@ public class Orchestrator : MonoBehaviour
         gameover = false;
         paused = false;
         firstInputMade = false;
+        hardDropping = false;
         linesCleared = 0;
         sprintGoal = DEFAULT_SPRINT_GOAL;
         ultraTimeLimit = DEFAULT_ULTRA_TIME_LIMIT;
@@ -250,6 +255,16 @@ public class Orchestrator : MonoBehaviour
         if (PersistantVars.pVars.goal == ModeGoal.SPRINT)
         {
             ref_SprintLinesLeftText.gameObject.SetActive(true);
+        }
+
+        if (PersistantVars.pVars.goal == ModeGoal.SURVIVE)
+        {
+            string pauseKeybind = gameObject.GetComponent<PlayerInput>().actions.FindAction("Pause").GetBindingDisplayString();
+            ref_PauseToViewDetailsText.text = string.Format(PAUSE_TO_VIEW_DETAILS_TEXT, pauseKeybind);
+        }
+        else
+        {
+            ref_PauseToViewDetailsText.text = "";
         }
     }
 
@@ -296,8 +311,12 @@ public class Orchestrator : MonoBehaviour
                     dasLeftTimer = arr;
                     if (arr == 0) //Move the piece as far as it can if ARR is 0. Otherwise, just move it 1.
                     {
-                        while (ref_ActivePiece.CanPieceMove(Vector2Int.left))
+                        if (ref_ActivePiece.CanPieceMove(Vector2Int.left))
                         {
+                            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_MOVE); //Only play the sound once if the piece is able to move, no matter how far it can move.
+                        }
+                        while (ref_ActivePiece.CanPieceMove(Vector2Int.left))
+                        {                            
                             ref_ActivePiece.MovePiece(Vector2Int.left);
                         }
                     }
@@ -305,6 +324,7 @@ public class Orchestrator : MonoBehaviour
                     {
                         if (ref_ActivePiece.CanPieceMove(Vector2Int.left)) //Move the piece if possible.
                         {
+                            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_MOVE);
                             ref_ActivePiece.MovePiece(Vector2Int.left);
                         }
                     }
@@ -322,6 +342,10 @@ public class Orchestrator : MonoBehaviour
                     dasRightTimer = arr;
                     if (arr == 0) //Move the piece as far as it can if ARR is 0. Otherwise, just move it 1.
                     {
+                        if (ref_ActivePiece.CanPieceMove(Vector2Int.right))
+                        {
+                            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_MOVE); //Only play the sound once if the piece is able to move, no matter how far it can move.
+                        }
                         while (ref_ActivePiece.CanPieceMove(Vector2Int.right))
                         {
                             ref_ActivePiece.MovePiece(Vector2Int.right);
@@ -331,6 +355,7 @@ public class Orchestrator : MonoBehaviour
                     {
                         if (ref_ActivePiece.CanPieceMove(Vector2Int.right)) //Move the piece if possible.
                         {
+                            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_MOVE);
                             ref_ActivePiece.MovePiece(Vector2Int.right);
                         }
                     }
@@ -376,6 +401,11 @@ public class Orchestrator : MonoBehaviour
             }
             //Update partialFallProgress accordingly.
             partialFallProgress += distanceToFall;
+            //Play soft drop sound
+            if (partialFallProgress >= 1.0 && softDropHeld)
+            {
+                PersistantVars.pVars.PlaySound(SoundEffects.PIECE_MOVE);
+            }
             //Fall.
             while (partialFallProgress >= 1.0 && ref_ActivePiece.CanPieceMove(Vector2Int.down))
             {
@@ -521,6 +551,7 @@ public class Orchestrator : MonoBehaviour
     //This method is called when any gameover condition is detected and handles the transition to the post-game screen. //TODO: Actually add that post-game screen, in this first "blocks but not cursed yet" build, it doesn't exist.
     public void GameOver()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.GAME_END_DEATH);
         gameover = true;
         gameTimer.Stop();
         string resetKeybind = gameObject.GetComponent<PlayerInput>().actions.FindAction("Reset").GetBindingDisplayString(); //Determine reset keybind so it can be displayed.
@@ -530,6 +561,7 @@ public class Orchestrator : MonoBehaviour
     //This method is called when the current mode has been finished successfully. It's similar to GameOver but with a kinder message.
     public void GameComplete()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.GAME_END_EXCELLENT);
         gameover = true;
         gameTimer.Stop();
         string resetKeybind = gameObject.GetComponent<PlayerInput>().actions.FindAction("Reset").GetBindingDisplayString(); //Determine reset keybind so it can be displayed.
@@ -549,6 +581,7 @@ public class Orchestrator : MonoBehaviour
             SetFirstInputMade();
             if (ref_ActivePiece.CanPieceMove(Vector2Int.left)) //Move the piece if possible.
             {
+                PersistantVars.pVars.PlaySound(SoundEffects.PIECE_MOVE);
                 ref_ActivePiece.MovePiece(Vector2Int.left);
             }
             if (moveRightHeld && resetDASOnDirChange) //Reset opposite DAS timer if user desires.
@@ -583,6 +616,7 @@ public class Orchestrator : MonoBehaviour
             SetFirstInputMade();
             if (ref_ActivePiece.CanPieceMove(Vector2Int.right))
             {
+                PersistantVars.pVars.PlaySound(SoundEffects.PIECE_MOVE);
                 ref_ActivePiece.MovePiece(Vector2Int.right);
             }
             if (moveLeftHeld && resetDASOnDirChange) //Reset opposite DAS timer if user desires.
@@ -629,6 +663,8 @@ public class Orchestrator : MonoBehaviour
         }
         if (context.phase == InputActionPhase.Started)
         {
+            hardDropping = true;
+            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_HARD_DROP);
             SetFirstInputMade();
             ref_ActivePiece.HardDrop();
             ref_ActivePiece.LockPiece();
@@ -640,6 +676,7 @@ public class Orchestrator : MonoBehaviour
             {
                 dasRightTimer = Mathf.Max(harddropDCD, dasRightTimer);
             }
+            hardDropping = false;
         }
     }
 
@@ -656,8 +693,13 @@ public class Orchestrator : MonoBehaviour
             if (kick.x != -9999) //Stop if the kick is invalid.
             {
                 ref_ActivePiece.RotatePiece(RotState.CWI, kick);
+                RotateSound();
             }
-            
+            else
+            {
+                PersistantVars.pVars.PlaySound(SoundEffects.PIECE_WALL_KICK);
+            }
+
             if (moveLeftHeld)
             {
                 dasLeftTimer = Mathf.Max(rotateDCD, dasLeftTimer);
@@ -682,6 +724,11 @@ public class Orchestrator : MonoBehaviour
             if (kick.x != -9999) //Stop if the kick is invalid.
             {
                 ref_ActivePiece.RotatePiece(RotState.CCW, kick);
+                RotateSound();
+            }
+            else
+            {
+                PersistantVars.pVars.PlaySound(SoundEffects.PIECE_WALL_KICK);
             }
 
             if (moveLeftHeld)
@@ -708,6 +755,11 @@ public class Orchestrator : MonoBehaviour
             if (kick.x != -9999) //Stop if the kick is invalid.
             {
                 ref_ActivePiece.RotatePiece(RotState.TWO, kick);
+                RotateSound();
+            }
+            else
+            {
+                PersistantVars.pVars.PlaySound(SoundEffects.PIECE_WALL_KICK);
             }
 
             if (moveLeftHeld)
@@ -761,6 +813,7 @@ public class Orchestrator : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
+            PersistantVars.pVars.PlaySound(SoundEffects.GAME_PAUSE);
             if (!paused)
             {
                 paused = true;
@@ -768,6 +821,7 @@ public class Orchestrator : MonoBehaviour
                 ref_PauseTextObject.SetActive(true);
                 string pauseKeybind = gameObject.GetComponent<PlayerInput>().actions.FindAction("Pause").GetBindingDisplayString();
                 ref_PauseText.text = string.Format(PAUSED_TEXT, pauseKeybind);
+                SetCursesActiveDetailsText();
             }
             else
             {
@@ -786,11 +840,57 @@ public class Orchestrator : MonoBehaviour
         }
     }
 
+    //This method plays whichever sound is appropriate when a piece rotation occurs. The sound played depends on whether the rotation counts as a T-spin.
+    public void RotateSound()
+    {
+        int spinType = ref_ActivePiece.SpinCheck();
+        if (spinType == 0)
+        {
+            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_ROTATE);
+        }
+        else if (spinType == 1)
+        {
+            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_ROTATE_T_SLOT_MINI);
+        }
+        else //if (spinType == 2)
+        {
+            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_ROTATE_T_SLOT);
+        }
+    }
+
     //This method is called by most On[Input] methods. It sets firstInputMade to true and starts the game timer.
     public void SetFirstInputMade()
     {
+        if (!firstInputMade)
+        {
+            PersistantVars.pVars.PlaySound(SoundEffects.GAME_START_START);
+        }
         firstInputMade = true;
         gameTimer.Start();
+    }
+
+    public void SetCursesActiveDetailsText()
+    {
+        string detailText = "";
+        int numActiveCurses = 0;
+        for (int i = 0; i < PersistantVars.pVars.NUM_CURSES; i++)
+        {
+            if (ref_CurseManager.IsCurseActive((Curse)i))
+            {
+                numActiveCurses++;
+                detailText += ref_CurseManager.CURSE_DATA[i].name + ": ";
+                detailText += ref_CurseManager.CURSE_DATA[i].description;
+                if (numActiveCurses % 2 == 0) //Two curse descriptions can fit on a line, so go to next line as necessary.
+                {
+                    detailText += "\n";
+                }
+                else
+                {
+                    detailText += "      ";
+                }
+            }
+        }
+        ref_CursesActiveDetailsText.text = detailText;
     }
 
     //This method spawns a new piece from the front of the queue, and makes the queue and incoming piece update as well.
@@ -834,6 +934,7 @@ public class Orchestrator : MonoBehaviour
             ref_HoldPiece.ephemereal++;
             if (ref_HoldPiece.ephemereal >= HoldPiece.EPHEMEREAL_HOLD_THRESHOLD)
             {
+                PersistantVars.pVars.PlaySound(SoundEffects.GARBAGE_FLY_SEND);
                 ref_HoldPiece.piecePrototype = new BagPiece(0, BagPiece.EMPTY_HOLD);
                 ref_HoldPiece.UpdateDisplay();
             }
@@ -852,6 +953,10 @@ public class Orchestrator : MonoBehaviour
     //This method, called on every FixedUpdate, checks to see if the goal of the mode being played has been reached.
     public void CheckForGoal()
     {
+        if (gameover)
+        {
+            return; //Funny story behind this one; when I added the "game complete" sound effect and tested it in Ultra, it played REALLY FREAKING LOUD. Because it was playing once per fixed update. So yeah, this fixes that.
+        }
         if (PersistantVars.pVars.goal == ModeGoal.SPRINT)
         {
             if (linesCleared >= sprintGoal)

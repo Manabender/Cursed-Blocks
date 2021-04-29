@@ -31,71 +31,85 @@ public class ExtraModesInput : MonoBehaviour
 
     public void HoverPentaSprint()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = PENTA_SPRINT_TOOLTIP;
     }
 
     public void HoverPentaUltra()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = PENTA_ULTRA_TOOLTIP;
     }
 
     public void HoverPentathon()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = PENTATHON_TOOLTIP;
     }
 
     public void HoverPseudoSprint()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = PSEUDO_SPRINT_TOOLTIP;
     }
 
     public void HoverPseudoUltra()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = PSEUDO_ULTRA_TOOLTIP;
     }
 
     public void HoverPseudothon()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = PSEUDOTHON_TOOLTIP;
     }
 
     public void HoverOverSprint()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = OVERSPRINT_TOOLTIP;
     }
 
     public void HoverOverUltra()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = OVERULTRA_TOOLTIP;
     }
 
     public void HoverOverthon()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = OVERTHON_TOOLTIP;
     }
 
     public void HoverWidePC()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = WIDE_PC_TOOLTIP;
     }
 
     public void HoverNarrowPC()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = NARROW_PC_TOOLTIP;
     }
 
     public void HoverNightmare()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = NIGHTMARE_TOOLTIP;
     }
 
     public void HoverRhythm()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = RHYTHM_TOOLTIP;
     }
 
     public void HoverCustom()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = CUSTOM_TOOLTIP;
     }
 
@@ -106,6 +120,7 @@ public class ExtraModesInput : MonoBehaviour
 
     public void StartCustomMode(ModeGoal goal, BagType bagtype, int width, bool overtuned)
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         PersistantVars.pVars.goal = goal;
         PersistantVars.pVars.bagType = bagtype;
         PersistantVars.pVars.width = width;

@@ -208,52 +208,62 @@ public class SettingsInput : MonoBehaviour
     //I was right, there is a better way.
     public void ChangeDas(int change)
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         das = Mathf.Clamp(das + change, 0, DAS_MAX);
         UpdateDasText();
     }    
     public void ChangeArr(int change)
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         arr = Mathf.Clamp(arr + change, 0, ARR_MAX);
         UpdateArrText();
     }    
     public void ChangeSdg(float change)
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         sdg = Mathf.Clamp(sdg + change, SDG_MIN, SDG_MAX);
         UpdateSdgText();
     }    
     public void ChangeRotateDcd(int change)
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         rotateDcd = Mathf.Clamp(rotateDcd + change, 0, DCD_MAX);
         UpdateRotateDcdText();
     }    
     public void ChangeHarddropDcd(int change)
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         hardDropDcd = Mathf.Clamp(hardDropDcd + change, 0, DCD_MAX);
         UpdateHarddropDcdText();
     }    
     public void ChangeHoldDcd(int change)
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         holdDcd = Mathf.Clamp(holdDcd + change, 0, DCD_MAX);
         UpdateHoldDcdText();
     }
     public void SdgMin() 
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         sdg = SDG_MIN;
         UpdateSdgText();
     }
     public void SdgMax() 
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         sdg = SDG_MAX;
         UpdateSdgText();
     }
 
     public void InterruptDasClicked(bool newValue)
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         interruptDas = newValue;
     }
 
     public void MirrorMonoClicked(bool newValue)
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         mirrorMonoRotation = newValue;
     }
 
@@ -279,5 +289,12 @@ public class SettingsInput : MonoBehaviour
         PlayerPrefs.SetString("keyReset", map.FindAction("Reset").bindings[0].effectivePath);
 
         PlayerPrefs.Save();
+
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT); //Consciously putting this all the way at the bottom so that if we hear the sound, we know it worked. Or, at the very least, didn't throw a fatal error.
+    }
+
+    public void OnHover()
+    {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
     }
 }

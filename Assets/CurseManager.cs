@@ -224,6 +224,7 @@ public class CurseManager : MonoBehaviour
         {
             return;
         }
+        PersistantVars.pVars.PlaySound(SoundEffects.LEVEL_UP);
         activeCurses.RemoveAt(0);
         Destroy(curseRows[0]);
         curseRows.RemoveAt(0);

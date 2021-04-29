@@ -20,56 +20,71 @@ public class InformationInput : MonoBehaviour
 
     public void GeneralClick()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         SceneManager.LoadScene("MenuScenes/Information/InfoGeneral");
     }
 
     public void KicktablesClick()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         confirmKicktablesPanel.SetActive(true);
     }
 
     public void CursesClick()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         confirmCursesPanel.SetActive(true);
     }
 
     public void KicktablesYes()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         SceneManager.LoadScene("MenuScenes/Information/InfoKicktables");
     }
 
     public void KicktablesNo()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         confirmKicktablesPanel.SetActive(false);
     }
 
     public void CursesYes()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         SceneManager.LoadScene("MenuScenes/Information/InfoCurses");
     }
 
     public void CursesNo()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         confirmCursesPanel.SetActive(false);
     }
 
     public void GeneralHover()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = GENERAL_TEXT;
     }
 
     public void KicktablesHover()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = KICKTABLES_TEXT;
     }
 
     public void CursesHover()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
         tooltipText.text = CURSES_TEXT;
     }
 
     public void Unhover()
     {
         tooltipText.text = "";
+    }
+
+    public void OtherHover()
+    {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
     }
 }

@@ -24,31 +24,37 @@ public class MainMenuInput : MonoBehaviour
     public void HoverCursedBlocks(BaseEventData _)
     {
         tooltipText.text = CURSED_BLOCKS_TOOLTIP;
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
     }
 
     public void HoverExtraModes(BaseEventData _)
     {
         tooltipText.text = EXTRA_MODES_TOOLTIP;
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
     }
 
     public void HoverSettings(BaseEventData _)
     {
         tooltipText.text = SETTINGS_TOOLTIP;
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
     }
 
     public void HoverHighScores(BaseEventData _)
     {
         tooltipText.text = HIGH_SCORES_TOOLTIP;
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
     }
 
     public void HoverInformation(BaseEventData _)
     {
         tooltipText.text = INFORMATION_TOOLTIP;
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
     }
 
     public void HoverQuit(BaseEventData _)
     {
         tooltipText.text = QUIT_TOOLTIP;
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
     }
 
     public void Unhover(BaseEventData _)
@@ -58,41 +64,49 @@ public class MainMenuInput : MonoBehaviour
 
     public void OnCursedBlocks()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         SceneManager.LoadScene("MenuScenes/DifficultySelect/DifficultySelect");
     }
 
     public void OnExtraModes()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         SceneManager.LoadScene("MenuScenes/ExtraModes/ExtraModes");
     }
 
     public void OnSettings()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         SceneManager.LoadScene("MenuScenes/Settings/Settings");
     }
 
     public void OnHighScores()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         SceneManager.LoadScene("MenuScenes/HighScores/HighScores");
     }
 
     public void OnInformation()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         SceneManager.LoadScene("MenuScenes/Information/Information");
     }
 
     public void OnQuit()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         confirmQuitPanel.SetActive(true);
     }
 
     public void OnConfirmQuit()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         Application.Quit();
     }
 
     public void OnConfirmNoQuit()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         confirmQuitPanel.SetActive(false);
     }
 }

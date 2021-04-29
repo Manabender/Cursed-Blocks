@@ -11,6 +11,12 @@ public class Title : MonoBehaviour
 {
     public void OnClick()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         SceneManager.LoadScene("MenuScenes/Main/MainMenu");
+    }
+
+    public void OnHover()
+    {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_MOVE);
     }
 }

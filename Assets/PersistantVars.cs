@@ -20,6 +20,8 @@ public class PersistantVars : MonoBehaviour
     public BagType bagType; //The bag type of the game mode selected.
     public int width; //The width of the board for the game mode selected.
     public bool overtuned; //Was an overtuned mode selected? This causes all handling settings to be treated as to 0, except SDG, which is treated as max.
+    public AudioSource ref_Audio;
+    public AudioClip[] audioClips;
 
     //Awake is like Start, but even earlier.
     void Awake()
@@ -44,8 +46,91 @@ public class PersistantVars : MonoBehaviour
         bagType = BagType.CURSED;
         width = 10;
         overtuned = false;
+        ref_Audio = GetComponent<AudioSource>();
 
         //Don't destroy on load. That's kinda what "persistant" means.
         DontDestroyOnLoad(gameObject);
     }
+
+    public void PlaySound(SoundEffects sound)
+    {
+        ref_Audio.PlayOneShot(audioClips[(int)sound]);
+    }
+}
+
+//Reference list for sound effects. To play a sound, the code says "PlaySound(SoundEffects.[SOME_SOUND_NAME])" and the PlaySound function will convert that to an integer index into an AudioClip[] array.
+public enum SoundEffects
+{
+    ALARM_CLOSE_TO_TOP, //0
+    ALARM_NEXT_PIECE_WILL_KILL,
+    B2B,
+    COMBO1,
+    COMBO2,
+    COMBO3, //5
+    COMBO4,
+    COMBO5,
+    COMBO6,
+    COMBO7,
+    COMBO8, //10
+    COMBO9,
+    COMBO10,
+    COMBO11,
+    COMBO12,
+    COMBO13, //15
+    COMBO14,
+    COMBO15,
+    COMBO16,
+    COMBO17,
+    COMBO18, //20
+    COMBO19,
+    COMBO20,
+    GAME_END_DEATH,
+    GAME_END_EXCELLENT,
+    GAME_END_GAMEOVER, //25
+    GAME_ERROR,
+    GAME_PAUSE,
+    GAME_START_GO,
+    GAME_START_READY,
+    GAME_START_START, //30
+    GARBAGE_FLY_IMPACT,
+    GARBAGE_FLY_RECEIVE,
+    GARBAGE_FLY_SEND,
+    GARBAGE_SPAWN,
+    HURRY_UP, //35
+    LEVEL_UP,
+    LINE_CLEAR1,
+    LINE_CLEAR2,
+    LINE_CLEAR3,
+    LINE_CLEAR4, //40
+    LINE_CLEAR_COLLAPSE,
+    MENU_BACK,
+    MENU_CHANGE_SETTING,
+    MENU_MOVE,
+    MENU_SELECT_OPTION, //45
+    MENU_SELECT,
+    PACE_GAINED,
+    PACE_LOST,
+    PERFECT_CLEAR,
+    PIECE_HOLD, //50
+    PIECE_INITIAL_HOLD,
+    PIECE_INITIAL_ROTATION,
+    PIECE_INITIAL_SKIP,
+    PIECE_LAND,
+    PIECE_LOCK_FORCED, //55
+    PIECE_HARD_DROP,
+    PIECE_LOCK_DELAY_EXPIRED,
+    PIECE_MOVE,
+    PIECE_ROTATE_T_SLOT,
+    PIECE_ROTATE_T_SLOT_MINI, //60
+    PIECE_ROTATE,
+    PIECE_SKIP,
+    PIECE_STEP,
+    PIECE_WALL_KICK,
+    T_SPIN0, //65
+    T_SPIN1,
+    T_SPIN2,
+    T_SPIN3,
+    T_SPIN_MINI0,
+    T_SPIN_MINI1, //70
+    T_SPIN_MINI2
 }

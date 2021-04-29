@@ -46,6 +46,7 @@ public class HoldPiece : Piece
     {
         if (cooldown <= 0)
         {
+            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_HOLD);
             //Check for spiked hold. Note: This must be done before the actual hold action. Were it the other way around, it would be possible to spawn a piece then push a mino up inside that spawned piece with the garbage.
             if (ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.SPIKED_HOLD))
             {
