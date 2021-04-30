@@ -26,6 +26,7 @@ public class BindingContainer : MonoBehaviour
     {
         PersistantVars.pVars.PlaySound(SoundEffects.MENU_CHANGE_SETTING);
         InputAction actionRef = map.actions[myIndex];
+        inputScript.RebindStarted();
 
         rebindingOperation = actionRef.PerformInteractiveRebinding()
             .WithControlsExcluding("Mouse")
@@ -41,6 +42,7 @@ public class BindingContainer : MonoBehaviour
 
         bindingValue.text = map.actions[myIndex].bindings[0].ToDisplayString();
         PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
+        inputScript.RebindFinished();
     }    
 
     public void OnHover()

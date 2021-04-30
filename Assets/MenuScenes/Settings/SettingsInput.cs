@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /* ExtraModesInput class
@@ -19,8 +20,11 @@ public class SettingsInput : MonoBehaviour
     public Text ref_rotatedcdText;
     public Text ref_harddropdcdText;
     public Text ref_holddcdText;
+    public Slider ref_volumeSlider;
     public Toggle ref_interruptdasToggle;
     public Toggle ref_mirrormonoToggle;
+    public GameObject ref_backPanel;
+    public GameObject ref_blockMousePanel;
 
     public int das;
     public int arr;
@@ -30,6 +34,7 @@ public class SettingsInput : MonoBehaviour
     public int holdDcd;
     public bool interruptDas;
     public bool mirrorMonoRotation;
+    public float volume;
 
     public const int DAS_MAX = 250;
     public const int ARR_MAX = 50;
@@ -78,8 +83,9 @@ public class SettingsInput : MonoBehaviour
         {
             ref_mirrormonoToggle.isOn = false;
         }
+        ref_volumeSlider.value = volume;
     }
-    
+
     //This method reads PlayerPrefs. If a Pref doesn't exist, it is created.
     public void ReadPlayerPrefs()
     {
@@ -106,6 +112,9 @@ public class SettingsInput : MonoBehaviour
 
         if (!PlayerPrefs.HasKey("mirrorMono")) { PlayerPrefs.SetInt("mirrorMono", 0); }
         mirrorMonoRotation = PlayerPrefs.GetInt("mirrorMono") == 1;
+
+        if (!PlayerPrefs.HasKey("volume")) { PlayerPrefs.SetFloat("volume", 0.2f); }
+        volume = PlayerPrefs.GetFloat("volume");
 
         if (!PlayerPrefs.HasKey("keyLeft")) { PlayerPrefs.SetString("keyLeft", map.FindAction("Shift left").bindings[0].effectivePath); }
         map.FindAction("Shift left").ChangeBinding(0).WithPath(PlayerPrefs.GetString("keyLeft"));
@@ -138,6 +147,16 @@ public class SettingsInput : MonoBehaviour
         map.FindAction("Reset").ChangeBinding(0).WithPath(PlayerPrefs.GetString("keyReset"));
 
         PlayerPrefs.Save();
+    }
+
+    public void RebindStarted()
+    {
+        ref_blockMousePanel.SetActive(true);
+    }
+
+    public void RebindFinished()
+    {
+        ref_blockMousePanel.SetActive(false);
     }
 
     public void UpdateDasText()
@@ -267,6 +286,42 @@ public class SettingsInput : MonoBehaviour
         mirrorMonoRotation = newValue;
     }
 
+    public void ChangeVolume(float value)
+    {
+        volume = value;
+        PersistantVars.pVars.ref_Audio.volume = volume;
+    }
+
+    public void MouseUpOnVolume()
+    {
+        PersistantVars.pVars.PlaySound(SoundEffects.LINE_CLEAR4);
+    }
+
+    public void OnBack()
+    {
+        ref_backPanel.SetActive(true);
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
+    }
+
+    public void OnKeepChanges()
+    {
+        ApplyChanges();
+        SceneManager.LoadScene("MenuScenes/Main/MainMenu");
+    }
+
+    public void OnDiscardChanges()
+    {
+        PersistantVars.pVars.ref_Audio.volume = PlayerPrefs.GetFloat("volume");
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
+        SceneManager.LoadScene("MenuScenes/Main/MainMenu");
+    }
+
+    public void OnCancel()
+    {
+        ref_backPanel.SetActive(false);
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
+    }
+
     public void ApplyChanges()
     {
         PlayerPrefs.SetInt("DAS", das);
@@ -277,6 +332,7 @@ public class SettingsInput : MonoBehaviour
         PlayerPrefs.SetInt("holdDCD", holdDcd);
         PlayerPrefs.SetInt("interruptDAS", interruptDas ? 1 : 0);
         PlayerPrefs.SetInt("mirrorMono", mirrorMonoRotation ? 1 : 0);
+        PlayerPrefs.SetFloat("volume", volume);
         PlayerPrefs.SetString("keyLeft", map.FindAction("Shift left").bindings[0].effectivePath);
         PlayerPrefs.SetString("keyRight", map.FindAction("Shift right").bindings[0].effectivePath);
         PlayerPrefs.SetString("keySoftDrop", map.FindAction("Soft drop").bindings[0].effectivePath);

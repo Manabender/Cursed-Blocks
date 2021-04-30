@@ -23,6 +23,8 @@ public class PersistantVars : MonoBehaviour
     public AudioSource ref_Audio;
     public AudioClip[] audioClips;
 
+    public const float DEFAULT_VOLUME = 0.2f;
+
     //Awake is like Start, but even earlier.
     void Awake()
     {
@@ -47,6 +49,16 @@ public class PersistantVars : MonoBehaviour
         width = 10;
         overtuned = false;
         ref_Audio = GetComponent<AudioSource>();
+
+        //Set pseudo-global audio volume
+        if (PlayerPrefs.HasKey("volume"))
+        {
+            ref_Audio.volume = PlayerPrefs.GetFloat("volume");
+        }
+        else
+        {
+            ref_Audio.volume = DEFAULT_VOLUME;
+        }
 
         //Don't destroy on load. That's kinda what "persistant" means.
         DontDestroyOnLoad(gameObject);
