@@ -1985,7 +1985,7 @@ PrefabInstance:
     - target: {fileID: 8076157935608797973, guid: caf146dd60304b74b81dbd4f46ecd878,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LogHighScore
+      value: LogHighScoreOnExit
       objectReference: {fileID: 0}
     - target: {fileID: 8076157935608797973, guid: caf146dd60304b74b81dbd4f46ecd878,
         type: 3}

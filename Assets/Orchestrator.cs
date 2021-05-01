@@ -580,6 +580,14 @@ public class Orchestrator : MonoBehaviour
         LogHighTime();
     }
 
+    public void LogHighScoreOnExit()
+    {
+        if (!gameover)
+        {
+            LogHighScore();
+        }
+    }
+
     public void LogHighScore()
     {
         int tableIndex = GetHighScoreTableIndex();
