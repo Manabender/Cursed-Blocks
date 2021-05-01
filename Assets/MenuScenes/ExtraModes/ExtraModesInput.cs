@@ -185,6 +185,7 @@ public class ExtraModesInput : MonoBehaviour
 
     public void OnNightmare()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         confirmNightmarePanel.SetActive(true);
     }
 
@@ -206,6 +207,7 @@ public class ExtraModesInput : MonoBehaviour
 
     public void OnNoNightmare()
     {
+        PersistantVars.pVars.PlaySound(SoundEffects.MENU_SELECT);
         confirmNightmarePanel.SetActive(false);
     }
 }

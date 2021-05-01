@@ -60,7 +60,7 @@ public class Orchestrator : MonoBehaviour
     //Various """global""" variables
     public float gravity; //Gravity is the rate at which the active piece falls, measured in minoes per second. "Instant" ("20G") gravity is at least 11000 under default board height.
     public float partialFallProgress; //This is what fraction of a mino the active piece has already fallen. Once this exceeds 1, the active piece falls by 1 and this decrements by 1.
-    public long score; //The player's score, of course.
+    public int score; //The player's score, of course.
     public int combo; //The number (minus 1, because convention) of consecutive pieces which have cleared a line.
     public int backToBack; //The number (minus 1) of consecutive "Power Clears". Clearing at least one line with a T-spin (mini or full), or clearing at least four lines with a single piece, will each increment B2B. Clearing one, two, or three lines with a single piece without a T-spin resets B2B to -1.
     public int bagNumber; //How many bags have we been through? Which one are we in the middle of?
@@ -108,6 +108,7 @@ public class Orchestrator : MonoBehaviour
     public int holdDCD;
     public bool resetDASOnDirChange; //If enabled, resets one direction's DAS timer if the other direction is pressed or released.
     public bool mirrorMonominoRotation; //If enabled, the direction that monominoes "teleport" is mirrored. Normally CW goes right and CCW goes left, but if this is enabled (set to true), CW goes left and CCW goes right.
+    
     public const float DEFAULT_GRAVITY = 1.0f;
     public const int BASE_SCORE_MULTIPLIER = 20;
     public const int DROP_SCORE_MULTIPLIER = 21;
@@ -551,21 +552,177 @@ public class Orchestrator : MonoBehaviour
     //This method is called when any gameover condition is detected and handles the transition to the post-game screen. //TODO: Actually add that post-game screen, in this first "blocks but not cursed yet" build, it doesn't exist.
     public void GameOver()
     {
+        if (gameover)
+        {
+            return; //Under some conditions, GameOver() can be called more than once in a frame. This ensures that excess calls have no effect.
+        }
         PersistantVars.pVars.PlaySound(SoundEffects.GAME_END_DEATH);
         gameover = true;
         gameTimer.Stop();
         string resetKeybind = gameObject.GetComponent<PlayerInput>().actions.FindAction("Reset").GetBindingDisplayString(); //Determine reset keybind so it can be displayed.
         ref_GameoverText.text = string.Format(GAME_OVER_TEXT, resetKeybind);
+        LogHighScore();
     }
 
     //This method is called when the current mode has been finished successfully. It's similar to GameOver but with a kinder message.
     public void GameComplete()
     {
+        if (gameover)
+        {
+            return; //I don't think GameComplete() can suffer the same multiple-call problem as GameOver(), but it never hurts to take precautions.
+        }
         PersistantVars.pVars.PlaySound(SoundEffects.GAME_END_EXCELLENT);
         gameover = true;
         gameTimer.Stop();
         string resetKeybind = gameObject.GetComponent<PlayerInput>().actions.FindAction("Reset").GetBindingDisplayString(); //Determine reset keybind so it can be displayed.
         ref_GameoverText.text = string.Format(GAME_COMPLETE_TEXT, resetKeybind);
+        LogHighScore();
+        LogHighTime();
+    }
+
+    public void LogHighScore()
+    {
+        int tableIndex = GetHighScoreTableIndex();
+        if (tableIndex == -1)
+        {
+            return;
+        }
+        string tableString = PlayerPrefs.GetString(PersistantVars.pVars.HS_TABLE_KEYS[tableIndex]);
+        int[] tableScores = PersistantVars.pVars.HighScoreStringToInts(tableString);
+        int logScore;
+        if (PersistantVars.pVars.goal == ModeGoal.ALLCLEAR)
+        {
+            logScore = allClears;
+        }
+        else
+        {
+            logScore = score;
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            if (logScore > tableScores[i])
+            {
+                for (int j = 8; j >= i; j--)
+                {
+                    tableScores[j + 1] = tableScores[j];
+                }
+                tableScores[i] = logScore;
+                tableString = PersistantVars.pVars.HighScoreIntsToString(tableScores);
+                PlayerPrefs.SetString(PersistantVars.pVars.HS_TABLE_KEYS[tableIndex], tableString);
+                break;
+            }
+        }
+    }
+
+    public void LogHighTime()
+    {
+        int tableIndex = GetHighTimeTableIndex();
+        if (tableIndex == -1)
+        {
+            return;
+        }
+        string tableString = PlayerPrefs.GetString(PersistantVars.pVars.HS_TABLE_KEYS[tableIndex]);
+        int[] tableScores = PersistantVars.pVars.HighScoreStringToInts(tableString);
+        int rawTime = (int)gameTimer.ElapsedMilliseconds;
+        for (int i = 0; i < 10; i++)
+        {
+            if (rawTime < tableScores[i])
+            {
+                for (int j = 8; j >= i; j--)
+                {
+                    tableScores[j + 1] = tableScores[j];
+                }
+                tableScores[i] = rawTime;
+                tableString = PersistantVars.pVars.HighScoreIntsToString(tableScores);
+                PlayerPrefs.SetString(PersistantVars.pVars.HS_TABLE_KEYS[tableIndex], tableString);
+                break;
+            }
+        }
+    }
+
+    public int GetHighScoreTableIndex()
+    {
+        if (PersistantVars.pVars.goal == ModeGoal.SURVIVE)
+        {
+            return PersistantVars.pVars.difficulty; //Conveniently, the 0th through 3rd indices into HS_TABLE_KEYS correspond to difficulties 0 through 3.
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.ALLCLEAR)
+        {
+            if (PersistantVars.pVars.width == 9)
+            {
+                return 4;
+            }
+            else if (PersistantVars.pVars.width == 11)
+            {
+                return 5;
+            }
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.ULTRA)
+        {
+            if (PersistantVars.pVars.bagType == BagType.PENTA)
+            {
+                return 9;
+            }
+            else if (PersistantVars.pVars.bagType == BagType.PSEUDO)
+            {
+                return 10;
+            }
+            else if (PersistantVars.pVars.bagType == BagType.TETRA)
+            {
+                return 11;
+            }
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.MARATHON)
+        {
+            if (PersistantVars.pVars.bagType == BagType.PENTA)
+            {
+                return 12;
+            }
+            else if (PersistantVars.pVars.bagType == BagType.PSEUDO)
+            {
+                return 13;
+            }
+            else if (PersistantVars.pVars.bagType == BagType.TETRA)
+            {
+                return 14;
+            }
+        }
+        return -1;
+    }
+
+    public int GetHighTimeTableIndex()
+    {
+        if (PersistantVars.pVars.goal == ModeGoal.SPRINT)
+        {
+            if (PersistantVars.pVars.bagType == BagType.PENTA)
+            {
+                return 6;
+            }
+            else if (PersistantVars.pVars.bagType == BagType.PSEUDO)
+            {
+                return 7;
+            }
+            else if (PersistantVars.pVars.bagType == BagType.TETRA)
+            {
+                return 8;
+            }
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.MARATHON)
+        {
+            if (PersistantVars.pVars.bagType == BagType.PENTA)
+            {
+                return 15;
+            }
+            else if (PersistantVars.pVars.bagType == BagType.PSEUDO)
+            {
+                return 16;
+            }
+            else if (PersistantVars.pVars.bagType == BagType.TETRA)
+            {
+                return 17;
+            }
+        }
+        return -1;
     }
 
     //The next several functions, named "On[something]", are input-handling functions, invoked by the Player Input component.
@@ -798,6 +955,10 @@ public class Orchestrator : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
+            if (!gameover)
+            {
+                LogHighScore();
+            }
             SceneManager.LoadScene("MainGameScene"); //Is reloading the entire scene to reset wasteful? Lil' bit. Is it reliable? You betcha.
             /*ResetObject();
             ref_HoldPiece.ResetObject();
@@ -836,7 +997,7 @@ public class Orchestrator : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
-            SceneManager.LoadScene("DebugScenes/DebugRoot");
+            //SceneManager.LoadScene("DebugScenes/DebugRoot"); //Commented out for release
         }
     }
 
@@ -1011,7 +1172,12 @@ public class Orchestrator : MonoBehaviour
     public void UpdateMarathonLevelAndGravity()
     {
         //Note that scoreMultiplier doubles as level in marathon modes. Even so, scoreMultipler is still a multiplier applied to points scored (excluding softdrops and harddrops).
+        int previousMultiplier = scoreMultiplier;
         scoreMultiplier = 1 + (linesCleared / linesPerLevel);
+        if (previousMultiplier != scoreMultiplier && firstInputMade)
+        {
+            PersistantVars.pVars.PlaySound(SoundEffects.LEVEL_UP);
+        }
         gravity = GravityForLevel(scoreMultiplier);
     }
 

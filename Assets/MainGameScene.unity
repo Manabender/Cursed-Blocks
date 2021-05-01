@@ -1957,6 +1957,46 @@ PrefabInstance:
       propertyPath: m_text
       value: Quit to Main
       objectReference: {fileID: 0}
+    - target: {fileID: 8076157935608797973, guid: caf146dd60304b74b81dbd4f46ecd878,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8076157935608797973, guid: caf146dd60304b74b81dbd4f46ecd878,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8076157935608797973, guid: caf146dd60304b74b81dbd4f46ecd878,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1822384703}
+    - target: {fileID: 8076157935608797973, guid: caf146dd60304b74b81dbd4f46ecd878,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 835958157}
+    - target: {fileID: 8076157935608797973, guid: caf146dd60304b74b81dbd4f46ecd878,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8076157935608797973, guid: caf146dd60304b74b81dbd4f46ecd878,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LogHighScore
+      objectReference: {fileID: 0}
+    - target: {fileID: 8076157935608797973, guid: caf146dd60304b74b81dbd4f46ecd878,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 8076157935608797973, guid: caf146dd60304b74b81dbd4f46ecd878,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: caf146dd60304b74b81dbd4f46ecd878, type: 3}
 --- !u!224 &835958156 stripped
@@ -1965,6 +2005,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 835958155}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &835958157 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1854596710729686152, guid: caf146dd60304b74b81dbd4f46ecd878,
+    type: 3}
+  m_PrefabInstance: {fileID: 835958155}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00399cb0b7206604aab2a0320e1d785b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &845248334
 GameObject:
   m_ObjectHideFlags: 0
@@ -2846,6 +2898,7 @@ MonoBehaviour:
   gameover: 0
   paused: 0
   firstInputMade: 0
+  hardDropping: 0
   linesCleared: 0
   sprintGoal: 0
   linesPerLevel: 0

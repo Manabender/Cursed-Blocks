@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using System.Text.RegularExpressions;
 
 /* Persistant Vars class
  * This class is used to store variables that need to be maintained across scenes. It is not destroyed on load.
@@ -23,7 +24,11 @@ public class PersistantVars : MonoBehaviour
     public AudioSource ref_Audio;
     public AudioClip[] audioClips;
 
+    public readonly string[] HS_TABLE_KEYS = new string[] { "cursed0", "cursed1", "cursed2", "cursed3", "narrowpc", "widepc", "pentasprint", "pseudosprint", "oversprint", "pentaultra", "pseudoultra", "overultra", "pentathonscore", "pseudothonscore", "overthonscore", "pentathontime", "pseudothontime", "overthontime" };
+    public readonly int[] HS_TIME_BASED_TABLES = new int[] { 6, 7, 8, 15, 16, 17 }; //Indices of time-based tables of the above array.
+
     public const float DEFAULT_VOLUME = 0.2f;
+    public Regex HS_REGEX = new Regex("\\d+");
 
     //Awake is like Start, but even earlier.
     void Awake()
@@ -60,8 +65,51 @@ public class PersistantVars : MonoBehaviour
             ref_Audio.volume = DEFAULT_VOLUME;
         }
 
+        InitHighScores();
+
         //Don't destroy on load. That's kinda what "persistant" means.
         DontDestroyOnLoad(gameObject);
+    }
+
+    //This method creates PlayerPrefs of high score tables if necessary.
+    public void InitHighScores()
+    {
+        for (int i = 0; i < HS_TABLE_KEYS.Length; i++)
+        {
+            if (!PlayerPrefs.HasKey(HS_TABLE_KEYS[i]))
+            {
+                if (Array.IndexOf(HS_TIME_BASED_TABLES, i) == -1)
+                {
+                    PlayerPrefs.SetString(HS_TABLE_KEYS[i], "0/0/0/0/0/0/0/0/0/0/");
+                }
+                else
+                {
+                    PlayerPrefs.SetString(HS_TABLE_KEYS[i], "9999999/9999999/9999999/9999999/9999999/9999999/9999999/9999999/9999999/9999999/");
+                }
+            }
+        }
+    }
+
+    public int[] HighScoreStringToInts(string highscores)
+    {
+        MatchCollection matches = HS_REGEX.Matches(highscores);
+        int[] ints = new int[10];
+        for (int i = 0; i < 10; i++)
+        {
+            ints[i] = int.Parse(matches[i].ToString());
+        }
+        return ints;
+    }
+
+    public string HighScoreIntsToString(int[] highscores)
+    {
+        string str = "";
+        foreach (int score in highscores)
+        {
+            str += score.ToString();
+            str += "/";
+        }
+        return str;
     }
 
     public void PlaySound(SoundEffects sound)
