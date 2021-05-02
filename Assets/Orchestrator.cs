@@ -279,6 +279,7 @@ public class Orchestrator : MonoBehaviour
         PlayerPrefs.SetInt("harddropDCD", 0);
         PlayerPrefs.SetInt("holdDCD", 0);
         PlayerPrefs.SetInt("interruptDAS", 0);
+        PlayerPrefs.SetInt("mirrorMono", 0);
         InputActionMap map = ref_PlayerInput.actions.FindActionMap("Piece");
         PlayerPrefs.SetString("keyLeft", map.FindAction("Shift left").bindings[0].path);
         PlayerPrefs.SetString("keyRight", map.FindAction("Shift right").bindings[0].path);
