@@ -57,6 +57,7 @@ public class Orchestrator : MonoBehaviour
     public Text ref_ScoreInfoText;
     public Text ref_SprintLinesLeftText;
     public Text ref_CursesActiveDetailsText;
+    public Text ref_GameModeText;
     //Various """global""" variables
     public float gravity; //Gravity is the rate at which the active piece falls, measured in minoes per second. "Instant" ("20G") gravity is at least 11000 under default board height.
     public float partialFallProgress; //This is what fraction of a mino the active piece has already fallen. Once this exceeds 1, the active piece falls by 1 and this decrements by 1.
@@ -267,6 +268,7 @@ public class Orchestrator : MonoBehaviour
         {
             ref_PauseToViewDetailsText.text = "";
         }
+        SetGameModeText();
     }
 
     //This method creates a new PlayerPrefs to use with default settings.
@@ -548,6 +550,42 @@ public class Orchestrator : MonoBehaviour
                 ref_FullClearText.text = ALL_CLEAR_TEXT;
             }
         }
+    }
+
+    public void SetGameModeText()
+    {
+        string modeText = "Game Mode: ";
+        if (PersistantVars.pVars.goal == ModeGoal.SURVIVE)
+        {
+            if (PersistantVars.pVars.difficulty == 0) { modeText += "Cursed Blocks - Novice"; }
+            else if (PersistantVars.pVars.difficulty == 1) { modeText += "Cursed Blocks - Acolyte"; }
+            else if (PersistantVars.pVars.difficulty == 2) { modeText += "Cursed Blocks - Warlock"; }
+            else if (PersistantVars.pVars.difficulty == 3) { modeText += "Cursed Blocks - Nightmare!"; }
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.ALLCLEAR)
+        {
+            if (PersistantVars.pVars.width == 9) { modeText += "Narrow Perfection"; }
+            else if (PersistantVars.pVars.width == 11) { modeText += "Narrow Perfection"; }
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.MARATHON)
+        {
+            if (PersistantVars.pVars.bagType == BagType.PENTA) { modeText += "Pentathon"; }
+            if (PersistantVars.pVars.bagType == BagType.PSEUDO) { modeText += "Pseudothon"; }
+            if (PersistantVars.pVars.bagType == BagType.TETRA) { modeText += "Overthon"; }
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.SPRINT)
+        {
+            if (PersistantVars.pVars.bagType == BagType.PENTA) { modeText += "Penta Sprint"; }
+            if (PersistantVars.pVars.bagType == BagType.PSEUDO) { modeText += "Pseudo Sprint"; }
+            if (PersistantVars.pVars.bagType == BagType.TETRA) { modeText += "Overtuned Sprint"; }
+        }
+        else if (PersistantVars.pVars.goal == ModeGoal.ULTRA)
+        {
+            if (PersistantVars.pVars.bagType == BagType.PENTA) { modeText += "Penta Ultra"; }
+            if (PersistantVars.pVars.bagType == BagType.PSEUDO) { modeText += "Pseudo Ultra"; }
+            if (PersistantVars.pVars.bagType == BagType.TETRA) { modeText += "Overtuned Ultra"; }
+        }
+        ref_GameModeText.text = modeText;
     }
 
     //This method is called when any gameover condition is detected and handles the transition to the post-game screen. //TODO: Actually add that post-game screen, in this first "blocks but not cursed yet" build, it doesn't exist.
