@@ -1532,7 +1532,7 @@ GameObject:
   - component: {fileID: 591312224}
   - component: {fileID: 591312223}
   m_Layer: 7
-  m_Name: EphemerealHoldText
+  m_Name: EphemeralHoldText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1589,7 +1589,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Ephemereal [***.]
+  m_Text: Ephemeral [***.]
 --- !u!222 &591312224
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1814,7 +1814,7 @@ MonoBehaviour:
   ref_Orchestrator: {fileID: 1822384703}
   cooldown: 0
   spikes: 0
-  ephemereal: 0
+  ephemeral: 0
 --- !u!1001 &835958155
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2881,7 +2881,7 @@ MonoBehaviour:
   ref_SpikedHoldText: {fileID: 975948492}
   ref_AntigravText: {fileID: 350175715}
   ref_SlowHoldText: {fileID: 12645407}
-  ref_EphemerealHoldText: {fileID: 591312223}
+  ref_EphemeralHoldText: {fileID: 591312223}
   ref_SlipperyText: {fileID: 1390685863}
   ref_ClumpedText: {fileID: 490531024}
   ref_ScoreInfoText: {fileID: 237470531}

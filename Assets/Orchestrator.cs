@@ -51,7 +51,7 @@ public class Orchestrator : MonoBehaviour
     public Text ref_SpikedHoldText;
     public Text ref_AntigravText;
     public Text ref_SlowHoldText;
-    public Text ref_EphemerealHoldText;
+    public Text ref_EphemeralHoldText;
     public Text ref_SlipperyText;
     public Text ref_ClumpedText;
     public Text ref_ScoreInfoText;
@@ -1099,10 +1099,10 @@ public class Orchestrator : MonoBehaviour
         softDropPointsThisPiece = 0;
         ref_Queue.UpdateIncomingGarbageDisplay(); //This needs to be updated every piece.
         //Handle Ephemereal Hold curse; if active, increase the ephemeral hold count, and if it's high enough, remove the hold piece.
-        if (ref_CurseManager.IsCurseActive(Curse.EPHEMEREAL_HOLD) && !wasHeld)
+        if (ref_CurseManager.IsCurseActive(Curse.EPHEMERAL_HOLD) && !wasHeld)
         {
-            ref_HoldPiece.ephemereal++;
-            if (ref_HoldPiece.ephemereal >= HoldPiece.EPHEMEREAL_HOLD_THRESHOLD)
+            ref_HoldPiece.ephemeral++;
+            if (ref_HoldPiece.ephemeral >= HoldPiece.EPHEMERAL_HOLD_THRESHOLD)
             {
                 PersistantVars.pVars.PlaySound(SoundEffects.GARBAGE_FLY_SEND);
                 ref_HoldPiece.piecePrototype = new BagPiece(0, BagPiece.EMPTY_HOLD);
@@ -1111,13 +1111,13 @@ public class Orchestrator : MonoBehaviour
         }
         else //If the curse isn't active, OR if the piece was held, reset ephemereal count to 0. This single "else" handily takes care of both cases!
         {
-            ref_HoldPiece.ephemereal = 0;
+            ref_HoldPiece.ephemeral = 0;
         }
         if (ref_HoldPiece.piecePrototype.HasProperty(BagPiece.EMPTY_HOLD)) //Reset the count if there is no hold piece.
         {
-            ref_HoldPiece.ephemereal = 0;
+            ref_HoldPiece.ephemeral = 0;
         }
-        ref_HoldPiece.UpdateEphemerealDisplay();
+        ref_HoldPiece.UpdateEphemeralDisplay();
     }
 
     //This method, called on every FixedUpdate, checks to see if the goal of the mode being played has been reached.

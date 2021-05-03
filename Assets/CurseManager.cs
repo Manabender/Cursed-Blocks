@@ -405,8 +405,8 @@ public class CurseManager : MonoBehaviour
             "Hides all but the topmost mino in each column",
             70);
 
-        CURSE_DATA[(int)Curse.EPHEMEREAL_HOLD] = new CurseData(
-            "Ephemereal Hold",
+        CURSE_DATA[(int)Curse.EPHEMERAL_HOLD] = new CurseData(
+            "Ephemeral Hold",
             "Held piece disappears if not used 4 times",
             40);
 
@@ -468,7 +468,7 @@ public enum Curse
     SLOW_HOLD, //20
     MIRROR,
     MIST,
-    EPHEMEREAL_HOLD,
+    EPHEMERAL_HOLD,
     SLIPPERY,
     GRAVITY, //25 //Unfortunately, "20G" isn't a valid name.
     ANTIGRAV

@@ -3989,29 +3989,29 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Ephemereal hold (Lv 4): If hold goes unused for four pieces in a row,
-    the piece in hold disappears, leaving hold empty, as it is at the start of the
-    game.
+  m_Text: 'Ephemeral hold (Lv 4): If hold goes unused for four pieces in a row, the
+    piece in hold disappears, leaving hold empty, as it is at the start of the game.
 
 
-    Slippery (Lv 7): If a piece locks in at a position where it would
-    be able to move both left and right, it will move one space randomly left or
-    right. If this movement puts it in a position where it can move down, it will
-    then move down as far as it can. Then it will finally and truly lock in. To avoid
-    this, place pieces such that there is at least one mino immediately to their
-    left or right.
+    Slippery
+    (Lv 7): If a piece locks in at a position where it would be able to move both
+    left and right, it will move one space randomly left or right. If this movement
+    puts it in a position where it can move down, it will then move down as far as
+    it can. Then it will finally and truly lock in. To avoid this, place pieces such
+    that there is at least one mino immediately to their left or right.
 
 
-    20G (Lv 9): Gravity is increased to maximum. As soon as
-    they spawn, pieces will fall as far as they can. Note that, unlike some games,
-    in this game, each internal frame handles rotation, then left/right movement,
-    then gravity, in that order. As a result, it might be possible to get some pieces
-    over certain hurdles that they couldn''t make in other games.
+    20G
+    (Lv 9): Gravity is increased to maximum. As soon as they spawn, pieces will fall
+    as far as they can. Note that, unlike some games, in this game, each internal
+    frame handles rotation, then left/right movement, then gravity, in that order.
+    As a result, it might be possible to get some pieces over certain hurdles that
+    they couldn''t make in other games.
 
 
-    Antigrav
-    (Lv 20): When you clear a line, the minoes above it don''t fall down as they
-    normally do. They simply remain where they are, "floating" in a sense.'
+    Antigrav (Lv 20): When you clear a
+    line, the minoes above it don''t fall down as they normally do. They simply remain
+    where they are, "floating" in a sense.'
 --- !u!222 &933534383
 CanvasRenderer:
   m_ObjectHideFlags: 0

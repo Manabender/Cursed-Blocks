@@ -12,10 +12,10 @@ public class HoldPiece : Piece
     //public BagPiece heldPiece; //The held piece! //NOTE: This actually was not necessary. The identity of the held piece is now stored in the superclass field "piecePrototype".
     public int cooldown; //The number of pieces that must be dropped before hold can be used again. Usually set to 1 whenever hold is used.
     public int spikes; //The number of times that hold has been used while the Spiked Hold curse is active. Once this gets high enough, it resets to 0 and garbage is added.
-    public int ephemereal; //The number of pieces that have gone by without using hold while the Ephemereal Hold curse is active. If this gets high enough, the hold piece disappears.
+    public int ephemeral; //The number of pieces that have gone by without using hold while the Ephemereal Hold curse is active. If this gets high enough, the hold piece disappears.
 
     public const int SPIKED_HOLD_THRESHOLD = 3; //The number of times that hold must be used while under the Spiked Hold curse to trigger adding garbage.
-    public const int EPHEMEREAL_HOLD_THRESHOLD = 4; //The number of times that hold must go unused while under the Ephemereal Hold curse to trigger removing the hold piece.
+    public const int EPHEMERAL_HOLD_THRESHOLD = 4; //The number of times that hold must go unused while under the Ephemereal Hold curse to trigger removing the hold piece.
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +37,7 @@ public class HoldPiece : Piece
         piecePrototype = new BagPiece(0, BagPiece.EMPTY_HOLD); //Initialize hold with a "hold is empty" piece.
         cooldown = 0;
         spikes = 0;
-        ephemereal = 0;
+        ephemeral = 0;
         UpdateDisplay();
     }
 
@@ -133,25 +133,25 @@ public class HoldPiece : Piece
     }
 
     //This method updates the display for Ephemereal Hold.
-    public void UpdateEphemerealDisplay()
+    public void UpdateEphemeralDisplay()
     {
-        if (!ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.EPHEMEREAL_HOLD)) //If curse is inactive, disable the display.
+        if (!ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.EPHEMERAL_HOLD)) //If curse is inactive, disable the display.
         {
-            ref_Orchestrator.ref_EphemerealHoldText.text = "";
+            ref_Orchestrator.ref_EphemeralHoldText.text = "";
         }
         else
         {
-            string text = "Ephemereal [";
-            for (int i = 0; i < ephemereal; i++)
+            string text = "Ephemeral [";
+            for (int i = 0; i < ephemeral; i++)
             {
                 text += "*";
             }
-            for (int i = ephemereal; i < EPHEMEREAL_HOLD_THRESHOLD; i++)
+            for (int i = ephemeral; i < EPHEMERAL_HOLD_THRESHOLD; i++)
             {
                 text += ".";
             }
             text += "]";
-            ref_Orchestrator.ref_EphemerealHoldText.text = text;
+            ref_Orchestrator.ref_EphemeralHoldText.text = text;
         }
     }
 }
