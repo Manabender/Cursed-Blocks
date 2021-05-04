@@ -776,7 +776,7 @@ public class Orchestrator : MonoBehaviour
     public void OnShiftLeft(InputAction.CallbackContext context)
     {
         //Debug.Log("heard left input");
-        if (gameover)
+        if (gameover || paused)
         {
             return;
         }
@@ -811,7 +811,7 @@ public class Orchestrator : MonoBehaviour
     public void OnShiftRight(InputAction.CallbackContext context)
     {
         //Debug.Log("heard right input");
-        if (gameover)
+        if (gameover || paused)
         {
             return;
         }
@@ -844,7 +844,7 @@ public class Orchestrator : MonoBehaviour
 
     public void OnSoftDrop(InputAction.CallbackContext context)
     {
-        if (gameover)
+        if (gameover || paused)
         {
             return;
         }
@@ -861,7 +861,7 @@ public class Orchestrator : MonoBehaviour
 
     public void OnHardDrop(InputAction.CallbackContext context)
     {
-        if (gameover)
+        if (gameover || paused)
         {
             return;
         }
@@ -886,7 +886,7 @@ public class Orchestrator : MonoBehaviour
 
     public void OnRotateCW(InputAction.CallbackContext context)
     {
-        if (gameover)
+        if (gameover || paused)
         {
             return;
         }
@@ -917,7 +917,7 @@ public class Orchestrator : MonoBehaviour
 
     public void OnRotateCCW(InputAction.CallbackContext context)
     {
-        if (gameover)
+        if (gameover || paused)
         {
             return;
         }
@@ -948,7 +948,7 @@ public class Orchestrator : MonoBehaviour
 
     public void OnRotate180(InputAction.CallbackContext context)
     {
-        if (gameover)
+        if (gameover || paused)
         {
             return;
         }
@@ -979,7 +979,7 @@ public class Orchestrator : MonoBehaviour
 
     public void OnHold(InputAction.CallbackContext context)
     {
-        if (gameover)
+        if (gameover || paused)
         {
             return;
         }
@@ -1002,6 +1002,10 @@ public class Orchestrator : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
+            if (paused)
+            {
+                return;
+            }
             if (!gameover)
             {
                 LogHighScore();
