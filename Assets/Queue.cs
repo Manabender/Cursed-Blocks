@@ -26,9 +26,12 @@ public class Queue : MonoBehaviour
 
     public readonly int[] DROUGHT_FLOOD_PIECES = new int[] { 1, 3, 4, 5, 6 }; //The pieces that drought and flood can add. Basically all tetrominoes except I and T.
     public readonly int[] NICE_PENTOMINOES = new int[] { 12, 13, 14, 17, 18, 19, 21 }; //Pentomino curse gives one of these, then one of *any* pentomino. Includes I5, J5, L5, Pa, Pb, T5, and V.
+    public readonly int[] VERY_NICE_PSEUDOS = new int[] { 32, 33, 39, 41, 42, 45, 46 }; //Pseudos are classified by their parity for the purpose of pseudo modes. "Very nice" pseudos have 2-2 parity; that is, if placed on a checkerboard, they would cover 2 squares of each color.
+    public readonly int[] NICE_PSEUDOS = new int[] { 30, 31, 34, 35, 40, 43, 44, 48, 49, 50, 51, 54, 55 }; //"Nice" pseudos have 3-1 parity; on a checkerboard, they would cover 3 squares of one color and 1 of the other.
+    public readonly int[] MEAN_PSEUDOS = new int[] { 36, 37, 38, 47, 52, 53, 56 }; //"Mean" pseudos have 4-0 parity; on a checkerboard, they would cover 4 squares of the same color every time.
     public readonly int[] TETRA_BAG = new int[] { 0, 1, 2, 3, 4, 5, 6 };
     public readonly int[] PENTA_BAG = new int[] { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 };
-    public readonly int[] PSEUDO_BAG = new int[] { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56 };
+    //public readonly int[] PSEUDO_BAG = new int[] { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56 };
     public const int PENTOMINOES_START_INDEX = 10;
     public const int PENTOMINOES_END_INDEX = 27;
     public const int PSEUDO_START_INDEX = 30;
@@ -136,7 +139,7 @@ public class Queue : MonoBehaviour
         }
         else if (PersistantVars.pVars.bagType == BagType.PSEUDO)
         {
-            BuildSetBag(PSEUDO_BAG);
+            BuildPseudoBag();
         }
         else if (PersistantVars.pVars.bagType == BagType.CUSTOMBAG)
         {
@@ -333,6 +336,53 @@ public class Queue : MonoBehaviour
         for (int i = 0; i < pieces.Length; i++)
         {
             int selectedElement = Random.Range(i, pieces.Length);
+            BagPiece swap = bag[selectedElement];
+            bag[selectedElement] = bag[i];
+            bag[i] = swap;
+        }
+        AddBag(bag);
+    }
+
+    //BuildPseudoBag generates a bag for use in the Pseudo extra modes. A pseudo bag consists of all seven tetrominoes, two "very nice" pseudos, two "nice" pseudos, and one "mean" pseudo.
+    public void BuildPseudoBag()
+    {
+        BagPiece[] bag = new BagPiece[12];
+        //First, add the seven tetrominoes.
+        for (int i = 0; i < TETRA_BAG.Length; i++)
+        {
+            bag[i] = new BagPiece(TETRA_BAG[i]);
+        }
+        //Add two "very nice" pseudos.
+        int firstPiece = VERY_NICE_PSEUDOS[Random.Range(0, VERY_NICE_PSEUDOS.Length)];
+        int secondPiece;
+        while (true)
+        {
+            secondPiece = VERY_NICE_PSEUDOS[Random.Range(0, VERY_NICE_PSEUDOS.Length)];
+            if (firstPiece != secondPiece)
+            {
+                break;
+            }
+        }
+        bag[7] = new BagPiece(firstPiece);
+        bag[8] = new BagPiece(secondPiece);
+        //Add two "nice" pseudos.
+        firstPiece = NICE_PSEUDOS[Random.Range(0, NICE_PSEUDOS.Length)];
+        while (true)
+        {
+            secondPiece = NICE_PSEUDOS[Random.Range(0, NICE_PSEUDOS.Length)];
+            if (firstPiece != secondPiece)
+            {
+                break;
+            }
+        }
+        bag[9] = new BagPiece(firstPiece);
+        bag[10] = new BagPiece(secondPiece);
+        //Add a "mean" pseudo.
+        bag[11] = new BagPiece(MEAN_PSEUDOS[Random.Range(0, MEAN_PSEUDOS.Length)]);
+        //Shuffle using the Fisher-Yates method, a shuffle proven to be the most efficient in both time (runs in O(n)) and memory (runs in-place with only one extra "swap" variable).
+        for (int i = 0; i < bag.Length; i++)
+        {
+            int selectedElement = Random.Range(i, bag.Length);
             BagPiece swap = bag[selectedElement];
             bag[selectedElement] = bag[i];
             bag[i] = swap;
