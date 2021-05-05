@@ -377,7 +377,7 @@ public class CurseManager : MonoBehaviour
 
         CURSE_DATA[(int)Curse.FLOATING] = new CurseData(
             "Floating",
-            "These lock in 1 above floor, and no softdrop",
+            "Floaty pieces lock in 1 above the floor",
             90);
 
         CURSE_DATA[(int)Curse.FOG] = new CurseData(
