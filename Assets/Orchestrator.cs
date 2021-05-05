@@ -60,6 +60,7 @@ public class Orchestrator : MonoBehaviour
     public Text ref_GameModeText;
     //Various """global""" variables
     public float gravity; //Gravity is the rate at which the active piece falls, measured in minoes per second. "Instant" ("20G") gravity is at least 11000 under default board height.
+    public float gravityMultiplier; //The amount by which gravity is multiplied. This is used in order to "ease in" the 20G curse over a couple seconds, instead of just setting gravity to maximum in an instant as it starts.
     public float partialFallProgress; //This is what fraction of a mino the active piece has already fallen. Once this exceeds 1, the active piece falls by 1 and this decrements by 1.
     public int score; //The player's score, of course.
     public int combo; //The number (minus 1, because convention) of consecutive pieces which have cleared a line.
@@ -218,6 +219,7 @@ public class Orchestrator : MonoBehaviour
     {
         //Game variables
         gravity = DEFAULT_GRAVITY;
+        gravityMultiplier = 1.0f;
         partialFallProgress = 0.0f;
         score = 0;
         combo = -1;
@@ -379,29 +381,34 @@ public class Orchestrator : MonoBehaviour
         {
             ref_ActivePiece.locking = true;
         }*/
+        //Handle 20G curse; gravity ramps up over a couple seconds to maximum.
+        if (ref_CurseManager.IsCurseActive(Curse.GRAVITY))
+        {
+            gravityMultiplier = Mathf.Min(100000000f, gravityMultiplier * 1.008f);
+        }
+        else
+        {
+            gravityMultiplier = 1f;
+        }
         if (!ref_ActivePiece.locking) //If the piece isn't locking, make it fall according to gravity.
         {
             //Determine how far to fall.
             float distanceToFall;
             /*if (ref_ActivePiece.texture == Piece.FLOATING_TEXTURE_ID) //Side-effect of floating curse pieces: They do not fall, neither under gravity nor softdrop. They can only be harddropped.
             {
+                distanceToFall = 0; //This functionality has been removed as a nerf to floating.
+            }
+            else*/ if (!firstInputMade) //Gravity should not occur until the game "starts". The game starts once the player makes any input.
+            {
                 distanceToFall = 0;
             }
-            else*/ if (ref_CurseManager.IsCurseActive(Curse.GRAVITY)) //Handle "20g" gravity curse; if active, piece falls as far as it can.
-            {
-                distanceToFall = 999999999;
-            }
-            else if (softDropHeld && softDropGravity > gravity)
+            else if (softDropHeld && softDropGravity > gravity * gravityMultiplier)
             {
                 distanceToFall = softDropGravity * Time.fixedDeltaTime;
             }
-            else if (!firstInputMade) //Gravity should not occur until the game "starts". The game starts once the player makes any input.
-            {
-                distanceToFall = 0;
-            }
             else
             {
-                distanceToFall = gravity * Time.fixedDeltaTime;
+                distanceToFall = gravity * gravityMultiplier * Time.fixedDeltaTime;
             }
             //Update partialFallProgress accordingly.
             partialFallProgress += distanceToFall;
