@@ -9764,7 +9764,14 @@ MonoBehaviour:
 
     In
     the curse listings, the level of each curse is listed in parenthesis next to
-    its name. Higher level curses are generally tougher to deal with.'
+    its name. Higher level curses are generally tougher to deal with.
+
+
+
+
+    "This
+    is fine." [Three seconds later] "This is not fine." -Motto of the game, according
+    to JasonPlaysGames.'
 --- !u!222 &2104255911
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -99,6 +99,23 @@ public class Queue : MonoBehaviour
         ref_Orchestrator.ref_Board.cells[4, 5] = 1;
         ref_Orchestrator.ref_Board.cells[5, 5] = 1;
         ref_Orchestrator.ref_Board.cells[6, 5] = 1;*/
+
+        /*for (int y = 0; y < 2; y++)
+        {
+            for (int x = 0; x < 10; x++)
+            {
+                ref_Orchestrator.ref_Board.cells[x, y] = 1;
+            }
+        }
+        ref_Orchestrator.ref_Board.cells[3, 0] = 0;
+        ref_Orchestrator.ref_Board.cells[3, 1] = 0;
+        ref_Orchestrator.ref_Board.cells[4, 1] = 0;
+        ref_Orchestrator.ref_Board.cells[2, 2] = 1;
+        ref_Orchestrator.ref_Board.cells[2, 3] = 1; //This chunk of code was for setting up a board state to see if a fin-like tspin worked with a Ya pentomino. It did.
+        ref_Orchestrator.ref_Board.cells[2, 4] = 1;
+        ref_Orchestrator.ref_Board.cells[3, 4] = 1;
+        ref_Orchestrator.ref_Board.cells[4, 4] = 1;
+        ref_Orchestrator.ref_Board.cells[5, 4] = 1;*/
     }
 
     //ResetObject is a method that appears in several object scripts that resets it to start-of-game values. IMPORTANT: Queue.ResetObject MUST be called AFTER CurseManager.ResetObject, or all the bags that Queue generates will use OLD AND INVALID GAME VARIABLES.
