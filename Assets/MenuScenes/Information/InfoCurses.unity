@@ -581,7 +581,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -260, y: 33}
+  m_AnchoredPosition: {x: -260, y: 9}
   m_SizeDelta: {x: 10, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &108005196
@@ -2468,7 +2468,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 380, y: -160}
+  m_AnchoredPosition: {x: 380, y: -140}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &491974911
@@ -3187,7 +3187,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -260, y: -39}
+  m_AnchoredPosition: {x: -260, y: -63}
   m_SizeDelta: {x: 10, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &693037711
@@ -3523,7 +3523,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -260, y: -159}
+  m_AnchoredPosition: {x: -260, y: -183}
   m_SizeDelta: {x: 10, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &778279070
@@ -4680,11 +4680,9 @@ MonoBehaviour:
 
 
     Floating (Lv 9): One piece in the bag
-    gains the floating property. A floating piece is not subject to gravity and cannot
-    be soft-dropped, only hard-dropped. When hard-dropped, it will lock in one square
-    above where a normal piece would. (In the rare event that you are able to manuever
-    a floating piece under some other mino on the board, it will not float up, and
-    simply lock where it is.)'
+    gains the floating property. When a floating piece locks in, it will move up
+    one square. However, if you tuck a floating piece under something already on
+    the board, such that it is blocked from moving up, it won''t move. '
 --- !u!222 &1025617985
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5798,7 +5796,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 380, y: -140}
+  m_AnchoredPosition: {x: 380, y: -120}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &1326075395
@@ -6938,7 +6936,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 360, y: -140}
+  m_AnchoredPosition: {x: 360, y: -120}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &1487969900
@@ -8487,25 +8485,27 @@ MonoBehaviour:
     cleared until at least four are filled. You still score points as normal; if
     you fill two lines, you get points for a Double, whether they clear immediately
     or not. When the curse ends, any filled lines are cleared after one more piece
-    is placed.
+    is placed. (If any lines are filled on row 17 or higher, Clumped will be ignored.
+    All lines will clear, no matter how few there are.)
 
 
-    Slow hold (Lv 5): Hold gains a "cooldown" of one piece. When
-    you use hold, you cannot use hold for the next piece.
+    Slow hold (Lv 5): Hold
+    gains a "cooldown" of one piece. When you use hold, you cannot use hold for the
+    next piece.
 
 
-    Mirror (Lv 6): At
-    the end of the bag, the entire board is mirrored about the y-axis. The leftmost
-    column is exchanged with the rightmost column, the second-leftmost column is
-    exchanged with the second-rightmost column, and so on. Should the board contain
-    an odd number of columns (say, in a custom mode), the middle column is unaffected.
+    Mirror (Lv 6): At the end of the bag, the entire board is mirrored
+    about the y-axis. The leftmost column is exchanged with the rightmost column,
+    the second-leftmost column is exchanged with the second-rightmost column, and
+    so on. Should the board contain an odd number of columns (say, in a custom mode),
+    the middle column is unaffected.
 
 
-    Mist
-    (Lv 7): Only the topmost mino in each column is visible. Everything below is
-    hidden under a question mark. The actual minoes on the board remain unchanged;
-    you simply can''t see some of them. You can still place pieces in hidden areas
-    as long as you can remember which areas are actually open.'
+    Mist (Lv 7): Only the topmost mino in
+    each column is visible. Everything below is hidden under a question mark. The
+    actual minoes on the board remain unchanged; you simply can''t see some of them.
+    You can still place pieces in hidden areas as long as you can remember which
+    areas are actually open.'
 --- !u!222 &1860741161
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9899,7 +9899,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 400, y: -160}
+  m_AnchoredPosition: {x: 400, y: -140}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &2133869162
