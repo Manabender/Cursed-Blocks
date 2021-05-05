@@ -34,6 +34,7 @@ public class Board : MonoBehaviour
 
     public const int CLUMPED_THRESHOLD = 4;
     public const int MIST_CELL_TEXTURE_ID = 14;
+    public const int CLUMPED_IGNORE_HEIGHT_THRESHOLD = 16;
 
     // Start is called before the first frame update
     void Start()
@@ -257,11 +258,17 @@ public class Board : MonoBehaviour
         int spinCheckValue = ref_Orchestrator.ref_ActivePiece.SpinCheck(); //The spin check needs the state of the board BEFORE lines are cleared.
         //Check to see how many lines are filled.
         int linesFound = ScanForFullLines();
+        bool highLineCleared = false;
+        if (linesFound >= 100)
+        {
+            highLineCleared = true;
+            linesFound -= 100;
+        }
         //The number of lines "cleared", for scoring purposes, is the number of lines newly filled.
         int scoringLinesCleared = linesFound - clumpedLines;
         clumpedLines = linesFound;
         //Handle Clumped Curse; if active, only delete lines if enough lines are filled. If not active, always delete lines.
-        if (!ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.CLUMPED) || clumpedLines >= CLUMPED_THRESHOLD)
+        if (!ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.CLUMPED) || clumpedLines >= CLUMPED_THRESHOLD || highLineCleared)
         {
             DeleteLines();
         }
@@ -297,6 +304,7 @@ public class Board : MonoBehaviour
     public int ScanForFullLines()
     {
         int linesFound = 0;
+        bool highLineFound = false; //Clumped curse won't work if a line sufficiently near the top is filled. This is intended to prevent the curse from unfairly causing a game over.
         for (int y = 0; y < absoluteHeight; y++) //Check each line
         {
             bool filled = true;
@@ -311,9 +319,13 @@ public class Board : MonoBehaviour
             if (filled)
             {
                 linesFound++;
+                if (y >= CLUMPED_IGNORE_HEIGHT_THRESHOLD)
+                {
+                    highLineFound = true;
+                }
             }
         }
-        return linesFound;
+        return linesFound + (highLineFound ? 100 : 0);
     }
 
     //This is step 2 of the ClearLines method. This deletes filled lines as appropriate.
