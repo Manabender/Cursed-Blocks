@@ -383,11 +383,11 @@ public class Orchestrator : MonoBehaviour
         {
             //Determine how far to fall.
             float distanceToFall;
-            if (ref_ActivePiece.texture == Piece.FLOATING_TEXTURE_ID) //Side-effect of floating curse pieces: They do not fall, neither under gravity nor softdrop. They can only be harddropped.
+            /*if (ref_ActivePiece.texture == Piece.FLOATING_TEXTURE_ID) //Side-effect of floating curse pieces: They do not fall, neither under gravity nor softdrop. They can only be harddropped.
             {
                 distanceToFall = 0;
             }
-            else if (ref_CurseManager.IsCurseActive(Curse.GRAVITY)) //Handle "20g" gravity curse; if active, piece falls as far as it can.
+            else*/ if (ref_CurseManager.IsCurseActive(Curse.GRAVITY)) //Handle "20g" gravity curse; if active, piece falls as far as it can.
             {
                 distanceToFall = 999999999;
             }

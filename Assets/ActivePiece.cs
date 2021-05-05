@@ -138,7 +138,7 @@ public class ActivePiece : Piece
         }
         ghostOffset = tryDrop - 1;
         //Bump the ghost up one if the piece is floaty.
-        if (texture == FLOATING_TEXTURE_ID)
+        if (texture == FLOATING_TEXTURE_ID && CanPieceMove(Vector2Int.up))
         {
             ghostOffset--;
         }
@@ -220,6 +220,7 @@ public class ActivePiece : Piece
             }
         }
         //Handle Floating Curse; if the piece is floaty, move it up one before locking it in. Extra note: There is the possibility of getting a mino above a floaty piece. It is concievably possible that, for example, a J5 or L5 pentomino overhangs up far into the upper part of the board and the floaty piece can be moved under it. Or possibly even the floaty piece could be kicked down. Regardless, to handle this edge case, check if the piece can move up.
+        //Further extra note: That possibility is now significantly more likely. As of v1.0.3, floaty pieces are subject to gravity and can intentionally be wedged under something on the board to stop it from floating.
         if (texture == FLOATING_TEXTURE_ID && CanPieceMove(Vector2Int.up))
         {
             MovePiece(Vector2Int.up);
