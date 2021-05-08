@@ -572,7 +572,7 @@ public class Orchestrator : MonoBehaviour
         else if (PersistantVars.pVars.goal == ModeGoal.ALLCLEAR)
         {
             if (PersistantVars.pVars.width == 9) { modeText += "Narrow Perfection"; }
-            else if (PersistantVars.pVars.width == 11) { modeText += "Narrow Perfection"; }
+            else if (PersistantVars.pVars.width == 11) { modeText += "Wide Perfection"; }
         }
         else if (PersistantVars.pVars.goal == ModeGoal.MARATHON)
         {
