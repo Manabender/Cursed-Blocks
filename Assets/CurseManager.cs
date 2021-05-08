@@ -293,7 +293,7 @@ public class CurseManager : MonoBehaviour
         CURSE_DATA[(int)Curse.PENTA] = new CurseData(
             "Penta",
             "Adds two pentominoes per bag",
-            50);
+            40);
 
         CURSE_DATA[(int)Curse.SMALL_H] = new CurseData(
             "h",
@@ -308,7 +308,7 @@ public class CurseManager : MonoBehaviour
         CURSE_DATA[(int)Curse.FLOOD] = new CurseData(
             "Flood",
             "Adds three indentical pieces in a row to bag",
-            70);
+            80);
 
         CURSE_DATA[(int)Curse.PSEUDO] = new CurseData(
             "Pseudo",
@@ -323,7 +323,7 @@ public class CurseManager : MonoBehaviour
         CURSE_DATA[(int)Curse.BIG] = new CurseData(
             "Big",
             "Adds a BIG piece to each bag",
-            120);
+            100);
 
         CURSE_DATA[(int)Curse.BIG_O] = new CurseData(
             "Big O",
@@ -333,7 +333,7 @@ public class CurseManager : MonoBehaviour
         CURSE_DATA[(int)Curse.BIG_H] = new CurseData(
             "Big h",
             "hhhhhhhhhhh",
-            100);
+            120);
 
         CURSE_DATA[(int)Curse.CHEESE] = new CurseData(
             "Cheese Garbage",
@@ -368,7 +368,7 @@ public class CurseManager : MonoBehaviour
         CURSE_DATA[(int)Curse.DISGUISE] = new CurseData(
             "Disguise",
             "Some pieces are colored wrong",
-            20);
+            30);
 
         CURSE_DATA[(int)Curse.HARD] = new CurseData(
             "Hard",
@@ -383,12 +383,12 @@ public class CurseManager : MonoBehaviour
         CURSE_DATA[(int)Curse.FOG] = new CurseData(
             "Fog",
             "Hides all but one next piece",
-            40);
+            50);
 
         CURSE_DATA[(int)Curse.CLUMPED] = new CurseData(
             "Clumped",
             "Lines don't clear until you fill four of them",
-            80);
+            100);
 
         CURSE_DATA[(int)Curse.SLOW_HOLD] = new CurseData(
             "Slow Hold",
@@ -403,7 +403,7 @@ public class CurseManager : MonoBehaviour
         CURSE_DATA[(int)Curse.MIST] = new CurseData(
             "Mist",
             "Hides all but the topmost mino in each column",
-            70);
+            90);
 
         CURSE_DATA[(int)Curse.EPHEMERAL_HOLD] = new CurseData(
             "Ephemeral Hold",
@@ -413,7 +413,7 @@ public class CurseManager : MonoBehaviour
         CURSE_DATA[(int)Curse.SLIPPERY] = new CurseData(
             "Slippery",
             "Pieces slip sideways unless placed next to a wall",
-            70);
+            60);
 
         CURSE_DATA[(int)Curse.GRAVITY] = new CurseData(
             "20G",

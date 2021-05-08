@@ -116,6 +116,34 @@ public class Queue : MonoBehaviour
         ref_Orchestrator.ref_Board.cells[3, 4] = 1;
         ref_Orchestrator.ref_Board.cells[4, 4] = 1;
         ref_Orchestrator.ref_Board.cells[5, 4] = 1;*/
+
+        /*for (int y = 0; y < 6; y++)
+        {
+            for (int x = 0; x < 10; x++)
+            {
+                ref_Orchestrator.ref_Board.cells[x, y] = 1;
+            }
+        }
+        ref_Orchestrator.ref_Board.cells[2, 0] = 0;
+        ref_Orchestrator.ref_Board.cells[3, 0] = 0;
+        ref_Orchestrator.ref_Board.cells[2, 1] = 0;
+        ref_Orchestrator.ref_Board.cells[3, 1] = 0;
+        ref_Orchestrator.ref_Board.cells[2, 2] = 0;
+        ref_Orchestrator.ref_Board.cells[3, 2] = 0;
+        ref_Orchestrator.ref_Board.cells[2, 3] = 0;
+        ref_Orchestrator.ref_Board.cells[3, 3] = 0;
+        ref_Orchestrator.ref_Board.cells[2, 4] = 0;
+        ref_Orchestrator.ref_Board.cells[3, 4] = 0;
+        ref_Orchestrator.ref_Board.cells[2, 5] = 0;
+        ref_Orchestrator.ref_Board.cells[3, 5] = 0;
+        ref_Orchestrator.ref_Board.cells[4, 2] = 0;
+        ref_Orchestrator.ref_Board.cells[4, 3] = 0;
+        ref_Orchestrator.ref_Board.cells[5, 2] = 0;
+        ref_Orchestrator.ref_Board.cells[5, 3] = 0;
+        ref_Orchestrator.ref_Board.cells[1, 6] = 1;
+        ref_Orchestrator.ref_Board.cells[1, 7] = 1; //This chunk of code was for setting up a board state for a T-spin sextuple. I knew it would work, I just wanted to do it.
+        ref_Orchestrator.ref_Board.cells[1, 8] = 1;
+        ref_Orchestrator.ref_Board.cells[2, 8] = 1;*/
     }
 
     //ResetObject is a method that appears in several object scripts that resets it to start-of-game values. IMPORTANT: Queue.ResetObject MUST be called AFTER CurseManager.ResetObject, or all the bags that Queue generates will use OLD AND INVALID GAME VARIABLES.

@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &18421361
 RectTransform:
   m_ObjectHideFlags: 0
@@ -783,7 +783,7 @@ MonoBehaviour:
     bag of 7 pieces that come standard in every bag.
 
 
-    Penta (Lv 5): Adds two
+    Penta (Lv 4): Adds two
     pentominoes to the bag. One of them is a "nice" pentomino selected from those
     shown. The other can be any pentomino. Regardless, the same pentomino cannot
     be selected twice.
@@ -797,7 +797,7 @@ MonoBehaviour:
     (Lv 5): Adds three tetrominoes to the bag, selected uniquely from J, L, S, Z,
     and O.
 
-    Flood (Lv 7): Adds three of the same tetromino to the bag, all in
+    Flood (Lv 8): Adds three of the same tetromino to the bag, all in
     a row, selected from J, L, S, Z, and O.
 
     Pseudo (Lv 5): Adds two pseudo-tetrominoes
@@ -806,13 +806,13 @@ MonoBehaviour:
     Twin (Lv 7): Adds a twin piece to
     the bag.
 
-    Big (Lv 12): Adds a big tetromino to the bag.
+    Big (Lv 10): Adds a big tetromino to the bag.
 
     Big O (Lv 10):
     Adds a big O to the bag; a 3x3 square with a hole in the middle.
 
     Big h (Lv
-    10): Adds a big h to the bag.'
+    12): Adds a big h to the bag.'
 --- !u!222 &147187251
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3994,7 +3994,7 @@ MonoBehaviour:
 
 
     Slippery
-    (Lv 7): If a piece locks in at a position where it would be able to move both
+    (Lv 6): If a piece locks in at a position where it would be able to move both
     left and right, it will move one space randomly left or right. If this movement
     puts it in a position where it can move down, it will then move down as far as
     it can. Then it will finally and truly lock in. To avoid this, place pieces such
@@ -4609,7 +4609,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1025617983
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4666,7 +4666,7 @@ MonoBehaviour:
 
 
     Disguise
-    (Lv 2): Three pieces in the bag gain the disguise property. This causes them
+    (Lv 3): Three pieces in the bag gain the disguise property. This causes them
     to appear as the wrong color. Their shape and functionality is unaffected.
 
 
@@ -7553,7 +7553,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1575038493
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8477,13 +8477,13 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Fog (Lv 4): Hides all but one next piece. The queue remains unchanged;
+  m_Text: 'Fog (Lv 5): Hides all but one next piece. The queue remains unchanged;
     you simply can''t see as much of it.
 
 
-    Clumped (Lv 8): Filled lines are not
-    cleared until at least four are filled. You still score points as normal; if
-    you fill two lines, you get points for a Double, whether they clear immediately
+    Clumped (Lv 10): Filled lines are
+    not cleared until at least four are filled. You still score points as normal;
+    if you fill two lines, you get points for a Double, whether they clear immediately
     or not. When the curse ends, any filled lines are cleared after one more piece
     is placed. (If any lines are filled on row 17 or higher, Clumped will be ignored.
     All lines will clear, no matter how few there are.)
@@ -8501,7 +8501,7 @@ MonoBehaviour:
     the middle column is unaffected.
 
 
-    Mist (Lv 7): Only the topmost mino in
+    Mist (Lv 9): Only the topmost mino in
     each column is visible. Everything below is hidden under a question mark. The
     actual minoes on the board remain unchanged; you simply can''t see some of them.
     You can still place pieces in hidden areas as long as you can remember which
