@@ -58,6 +58,7 @@ public class Orchestrator : MonoBehaviour
     public Text ref_SprintLinesLeftText;
     public Text ref_CursesActiveDetailsText;
     public Text ref_GameModeText;
+    public Text ref_PPSText;
     //Various """global""" variables
     public float gravity; //Gravity is the rate at which the active piece falls, measured in minoes per second. "Instant" ("20G") gravity is at least 11000 under default board height.
     public float gravityMultiplier; //The amount by which gravity is multiplied. This is used in order to "ease in" the 20G curse over a couple seconds, instead of just setting gravity to maximum in an instant as it starts.
@@ -80,6 +81,7 @@ public class Orchestrator : MonoBehaviour
     public int allClears; //How many all clears have been made? Only functionally relevant in allclear modes.
     public int piecesPlacedSinceLastAllClear; //How many pieces have been used since the last all clear? Only functionally relevant in allclear modes to detect game over; you must score each allclear in no more pieces than the board width.
     public Stopwatch gameTimer; //The total time elapsed in the current game, starting from the first input and stopping at game over.
+    public int totalPieces; //How many pieces have been placed?
     //I was initially unsure as to whether I should keep time by counting FixedUpdates or by measuring real time. I decided to use real time because that is significantly harder to "fake".
     // FixedUpdates might occur slower on a very slow machine, or on a machine running many programs at once. The system clock, however, runs independantly of my code.
     //Score tuning variables
@@ -211,6 +213,7 @@ public class Orchestrator : MonoBehaviour
             HandleDAS();
             HandleGravity();
             CheckForGoal();
+            UpdateStatsText();
         }
     }
 
@@ -239,6 +242,7 @@ public class Orchestrator : MonoBehaviour
         allClears = 0;
         piecesPlacedSinceLastAllClear = 0;
         gameTimer = new Stopwatch();
+        totalPieces = 0;
         //Clear text fields
         ref_ComboText.text = "";
         ref_ClearTypeText.text = "";
@@ -1204,6 +1208,22 @@ public class Orchestrator : MonoBehaviour
                 GameComplete();
             }
         }
+    }
+
+    public void UpdateStatsText()
+    {
+        if (PersistantVars.pVars.goal == ModeGoal.SURVIVE)
+        {
+            ref_PPSText.text = "";
+            return;
+        }
+        if (gameTimer.ElapsedMilliseconds < 100) //This avoids divide-by-0 errors.
+        {
+            ref_PPSText.text = "PPS: 0.00";
+            return;
+        }
+        float pps = totalPieces * 1000f / gameTimer.ElapsedMilliseconds;
+        ref_PPSText.text = "PPS: " + pps.ToString("N2");
     }
 
     //This method determines what the current score multiplier is and updates the display accordingly.

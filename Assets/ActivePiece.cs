@@ -333,6 +333,7 @@ public class ActivePiece : Piece
 
         //Spawn the next piece.
         ref_Orchestrator.SpawnNextPiece();
+        ref_Orchestrator.totalPieces++;
         //SpawnPiece(Random.Range(0, 7)); //Used for testing purposes.
     }
 
