@@ -44,7 +44,7 @@ public class PersistantVars : MonoBehaviour
             return;
         }
 
-        //Initialize persistant vars (Note: forcedCurses is initialized in Start)
+        //Initialize persistant vars
         NUM_CURSES = Enum.GetNames(typeof(Curse)).Length;
         forcedCurses = new bool[NUM_CURSES];
         enableCurseGeneration = true;

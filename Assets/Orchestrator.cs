@@ -275,6 +275,7 @@ public class Orchestrator : MonoBehaviour
             ref_PauseToViewDetailsText.text = "";
         }
         SetGameModeText();
+        Stats.stats.ResetObject();
     }
 
     //This method creates a new PlayerPrefs to use with default settings.
