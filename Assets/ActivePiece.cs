@@ -265,10 +265,12 @@ public class ActivePiece : Piece
         else if (spinType != 0 && linesCleared >= 1) //Conditions for INCREMENTING B2B in case of TSPIN WITH AT LEAST ONE LINE CLEARED
         {
             ref_Orchestrator.backToBack++;
+            Stats.stats.MaxStat("Longest B2B chain", ref_Orchestrator.backToBack);
         }
         else if (spinType == 0 && linesCleared >= 4) //Conditions for INCREMENTING B2B in case of QUADRUPLE OR GREATER LINE CLEAR
         {
             ref_Orchestrator.backToBack++;
+            Stats.stats.MaxStat("Longest B2B chain", ref_Orchestrator.backToBack);
         }
         //else: B2B does not change.
 
@@ -293,6 +295,7 @@ public class ActivePiece : Piece
             int comboScoreGained = (ref_Orchestrator.comboScoreGain * ref_Orchestrator.combo * ref_Orchestrator.scoreMultiplier); //Award points for combo.
             ref_Orchestrator.score += comboScoreGained;
             Stats.stats.AddToStat("Score from combo", comboScoreGained);
+            Stats.stats.MaxStat("Longest combo", ref_Orchestrator.combo);
             PlayComboSound();
         }
         else
@@ -304,14 +307,20 @@ public class ActivePiece : Piece
         int fullClear = ref_Orchestrator.ref_Board.CheckFullClears();
         if (fullClear == 2)
         {
-            ref_Orchestrator.score += ref_Orchestrator.allClearScoreGain * ref_Orchestrator.scoreMultiplier;
+            int FCScoreGain = ref_Orchestrator.allClearScoreGain * ref_Orchestrator.scoreMultiplier;
+            ref_Orchestrator.score += FCScoreGain;
+            Stats.stats.IncStat("All Clears");
+            Stats.stats.AddToStat("Score from All Clears", FCScoreGain);
             //Update allclear count. Only relevant in allclear modes.
             ref_Orchestrator.allClears++;
             ref_Orchestrator.piecesPlacedSinceLastAllClear = 0;
         }
         else if (fullClear == 1)
         {
-            ref_Orchestrator.score += ref_Orchestrator.colorClearScoreGain * ref_Orchestrator.scoreMultiplier;
+            int FCScoreGain = ref_Orchestrator.colorClearScoreGain * ref_Orchestrator.scoreMultiplier;
+            ref_Orchestrator.score += FCScoreGain;
+            Stats.stats.IncStat("Color Clears");
+            Stats.stats.AddToStat("Score from Color Clears", FCScoreGain);
         }
         else
         {

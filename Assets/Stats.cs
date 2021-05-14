@@ -53,4 +53,20 @@ public class Stats : MonoBehaviour
             gameStats.Add(stat, addBy);
         }
     }
+
+    //Sets the value of a stat to a new value if it is greater. Or, creates the stat if it doesn't exist.
+    public void MaxStat(string stat, int value)
+    {
+        if (gameStats.ContainsKey(stat))
+        {
+            if (value > gameStats[stat])
+            {
+                gameStats[stat] = value;
+            }
+        }
+        else
+        {
+            gameStats.Add(stat, value);
+        }
+    }
 }
