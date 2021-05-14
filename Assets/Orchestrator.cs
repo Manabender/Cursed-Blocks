@@ -431,7 +431,9 @@ public class Orchestrator : MonoBehaviour
                 {
                     if (softDropPointsThisPiece < MAXIMUM_SOFT_DROP_POINTS_PER_PIECE)
                     {
-                        score += softDropScoreGain * DropScoreMultiplier();
+                        int scoreGain = softDropScoreGain * DropScoreMultiplier();
+                        score += scoreGain;
+                        Stats.stats.AddToStat("Score from soft drop", scoreGain);
                         softDropPointsThisPiece++;
                     }
                 }
@@ -1060,6 +1062,7 @@ public class Orchestrator : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
+            UnityEngine.Debug.Log("NEW DICT LISTING");
             foreach (KeyValuePair<string,int> pair in Stats.stats.gameStats)
             {
                 UnityEngine.Debug.Log(pair.Key + ":" + pair.Value);

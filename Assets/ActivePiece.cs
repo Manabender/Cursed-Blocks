@@ -176,10 +176,12 @@ public class ActivePiece : Piece
     //This method immediately drops the piece as far as it can go.
     public void HardDrop()
     {
+        int scoreGain = ref_Orchestrator.hardDropScoreGain * ref_Orchestrator.DropScoreMultiplier();
         while (CanPieceMove(Vector2Int.down))
         {
             MovePiece(Vector2Int.down);
-            ref_Orchestrator.score += ref_Orchestrator.hardDropScoreGain * ref_Orchestrator.DropScoreMultiplier(); //Award points for each cell dropped
+            ref_Orchestrator.score += scoreGain; //Award points for each cell dropped
+            Stats.stats.AddToStat("Score from hard drop", scoreGain);
         }
     }
 
@@ -274,7 +276,9 @@ public class ActivePiece : Piece
         if (linesCleared >= 1 && ref_Orchestrator.backToBack >= 1)
         {
             PersistantVars.pVars.PlaySound(SoundEffects.B2B);
-            scoreGain = scoreGain * 3 / 2;
+            int B2BScoreGain = scoreGain / 2;
+            scoreGain += B2BScoreGain;
+            Stats.stats.AddToStat("Score from B2B", B2BScoreGain);
         }
 
         
@@ -286,7 +290,9 @@ public class ActivePiece : Piece
         if (linesCleared >= 1)
         {
             ref_Orchestrator.combo++;
-            ref_Orchestrator.score += (ref_Orchestrator.comboScoreGain * ref_Orchestrator.combo * ref_Orchestrator.scoreMultiplier); //Award points for combo.
+            int comboScoreGained = (ref_Orchestrator.comboScoreGain * ref_Orchestrator.combo * ref_Orchestrator.scoreMultiplier); //Award points for combo.
+            ref_Orchestrator.score += comboScoreGained;
+            Stats.stats.AddToStat("Score from combo", comboScoreGained);
             PlayComboSound();
         }
         else
