@@ -1060,6 +1060,10 @@ public class Orchestrator : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
+            foreach (KeyValuePair<string,int> pair in Stats.stats.gameStats)
+            {
+                UnityEngine.Debug.Log(pair.Key + ":" + pair.Value);
+            }
             //SceneManager.LoadScene("DebugScenes/DebugRoot"); //Commented out for release
         }
     }

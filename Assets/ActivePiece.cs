@@ -249,6 +249,12 @@ public class ActivePiece : Piece
             scoreGain = ref_Orchestrator.tSpinScoreGain[linesCleared];
         }
 
+        //Multiply by score multiplier.
+        scoreGain *= ref_Orchestrator.scoreMultiplier;
+
+        //Update stats
+        UpdateLineClearStats(linesClearedValue, scoreGain);
+
         //Handle B2B
         if (spinType == 0 && linesCleared >= 1 && linesCleared <= 3) //Conditions for RESETTING B2B.
         {
@@ -271,8 +277,7 @@ public class ActivePiece : Piece
             scoreGain = scoreGain * 3 / 2;
         }
 
-        //Multiply by score multiplier.
-        scoreGain *= ref_Orchestrator.scoreMultiplier;
+        
 
         //Now that B2B is accounted for, add the points.
         ref_Orchestrator.score += scoreGain;
@@ -362,6 +367,28 @@ public class ActivePiece : Piece
         else if (ref_Orchestrator.combo == 19) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO19); }
         else if (ref_Orchestrator.combo >= 20) { PersistantVars.pVars.PlaySound(SoundEffects.COMBO20); }
 
+    }
+
+    public void UpdateLineClearStats(int linesClearedValue, int scoreGain)
+    {
+        if (linesClearedValue == 0) { return; }
+        else if (linesClearedValue == 1) { Stats.stats.IncStat("Singles cleared"); Stats.stats.AddToStat("Score from Singles", scoreGain); }
+        else if (linesClearedValue == 2) { Stats.stats.IncStat("Doubles cleared"); Stats.stats.AddToStat("Score from Doubles", scoreGain); }
+        else if (linesClearedValue == 3) { Stats.stats.IncStat("Triples cleared"); Stats.stats.AddToStat("Score from Triples", scoreGain); }
+        else if (linesClearedValue == 4) { Stats.stats.IncStat("Quadruples cleared"); Stats.stats.AddToStat("Score from Quadruples", scoreGain); }
+        else if (linesClearedValue == 5) { Stats.stats.IncStat("Pentuples cleared"); Stats.stats.AddToStat("Score from Pentuples", scoreGain); }
+        else if (linesClearedValue == 6) { Stats.stats.IncStat("Sextuples cleared"); Stats.stats.AddToStat("Score from Sextuples", scoreGain); }
+        else if (linesClearedValue == 7) { Stats.stats.IncStat("Septuples cleared"); Stats.stats.AddToStat("Score from Septuples", scoreGain); }
+        else if (linesClearedValue == 8) { Stats.stats.IncStat("Octuples cleared"); Stats.stats.AddToStat("Score from Octuples", scoreGain); }
+        else if (linesClearedValue == 100) { Stats.stats.IncStat("T-spin minis"); Stats.stats.AddToStat("Score from T-spin minis", scoreGain); }
+        else if (linesClearedValue == 101) { Stats.stats.IncStat("T-spin mini Singles cleared"); Stats.stats.AddToStat("Score from T-spin mini Singles", scoreGain); }
+        else if (linesClearedValue == 200) { Stats.stats.IncStat("T-spins"); Stats.stats.AddToStat("Score from T-spins", scoreGain); }
+        else if (linesClearedValue == 201) { Stats.stats.IncStat("T-spin Singles cleared"); Stats.stats.AddToStat("Score from T-spin Singles", scoreGain); }
+        else if (linesClearedValue == 202) { Stats.stats.IncStat("T-spin Doubles cleared"); Stats.stats.AddToStat("Score from T-spin Doubles", scoreGain); }
+        else if (linesClearedValue == 203) { Stats.stats.IncStat("T-spin Triples cleared"); Stats.stats.AddToStat("Score from T-spin Triples", scoreGain); }
+        else if (linesClearedValue == 204) { Stats.stats.IncStat("T-spin Quadruples cleared"); Stats.stats.AddToStat("Score from T-spin Quadruples", scoreGain); }
+        else if (linesClearedValue == 205) { Stats.stats.IncStat("T-spin Pentuples cleared"); Stats.stats.AddToStat("Score from T-spin Pentuples", scoreGain); }
+        else if (linesClearedValue == 206) { Stats.stats.IncStat("T-spin Sextuples cleared"); Stats.stats.AddToStat("Score from T-spin Sextuples", scoreGain); }
     }
 
     //This method, named MovePiece, moves the piece. Simple names are the best names.
