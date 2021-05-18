@@ -1169,6 +1169,7 @@ public class Orchestrator : MonoBehaviour
                 PersistantVars.pVars.PlaySound(SoundEffects.GARBAGE_FLY_SEND);
                 ref_HoldPiece.piecePrototype = new BagPiece(0, BagPiece.EMPTY_HOLD);
                 ref_HoldPiece.UpdateDisplay();
+                Stats.stats.IncStat("Pieces lost to Ephemeral Hold");
             }
         }
         else //If the curse isn't active, OR if the piece was held, reset ephemereal count to 0. This single "else" handily takes care of both cases!

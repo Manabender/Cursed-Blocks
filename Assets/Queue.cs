@@ -83,6 +83,7 @@ public class Queue : MonoBehaviour
         ref_Orchestrator.SpawnNextPiece();
         ref_Orchestrator.UpdateSpecificCurseDisplays();
         ref_Orchestrator.UpdateScoreMultiplier();
+        ref_Orchestrator.UpdateActiveCursesStats();
         /*for (int y = 0; y < 4; y++)
         {
             for (int x = 0; x < 10; x++)
@@ -186,7 +187,6 @@ public class Queue : MonoBehaviour
         {
             BuildNewBag();
         }
-        ref_Orchestrator.UpdateActiveCursesStats();
     }
 
     // AddBag() adds a bag (a list of pieces) to the end of the queue.

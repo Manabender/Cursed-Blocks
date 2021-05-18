@@ -207,6 +207,7 @@ public class ActivePiece : Piece
         //Handle Slippery Curse: If active, and the piece is placed where it is able to move both left and right (IE, not against a wall of some kind), it slips one square randomly left or right. Then, if it is able to fall further, it does.
         if (ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.SLIPPERY) && CanPieceMove(Vector2Int.left) && CanPieceMove(Vector2Int.right))
         {
+            Stats.stats.IncStat("Times a piece slipped");
             if (Random.Range(0,2) == 1)
             {
                 MovePiece(Vector2Int.left);
@@ -348,8 +349,13 @@ public class ActivePiece : Piece
         //Anti-skim curse: If a non-spin single was cleared, add garbage.
         if (ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.ANTISKIM) && spinType == 0 && linesCleared == 1)
         {
+            Stats.stats.IncStat("Garbage added from Anti-skim");
             ref_Orchestrator.ref_Board.AddCleanGarbage();
         }
+
+        //Update number of piece and number of mino stats.
+        Stats.stats.IncStat("Total pieces dropped");
+        Stats.stats.AddToStat("Total minoes dropped", minoes.Length);
 
         //Spawn the next piece.
         ref_Orchestrator.SpawnNextPiece();

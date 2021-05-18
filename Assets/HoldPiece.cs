@@ -54,6 +54,7 @@ public class HoldPiece : Piece
                 if (spikes >= SPIKED_HOLD_THRESHOLD)
                 {
                     spikes = 0;
+                    Stats.stats.IncStat("Garbage added from Spiked Hold");
                     ref_Orchestrator.ref_Board.AddCleanGarbage();
                 }
                 UpdateSpikeDisplay();

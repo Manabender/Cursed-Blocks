@@ -99,6 +99,7 @@ public class Board : MonoBehaviour
                 ref_Orchestrator.GameOver();
             }
         }
+        Stats.stats.IncStat("Garbage received");
         //Move all rows up one.
         for (int y = absoluteHeight - 1; y > 0; y--)
         {
@@ -335,6 +336,7 @@ public class Board : MonoBehaviour
         for (int y = 0; y < absoluteHeight; y++) //Check each line
         {
             bool cleared = true;
+            bool garbageFound = false;
             int hardBlocksFound = 0;
             //Check if the line is completely filled TODO: This doesn't need to be done if ScanForFullLines() passes along an array of filled lines. Could get a small efficiency gain by doing that.
             for (int x = 0; x < width; x++)
@@ -348,10 +350,18 @@ public class Board : MonoBehaviour
                 {
                     hardBlocksFound++;
                 }
+                else if (cells[x, y] == Piece.GARBAGE_TEXTURE_ID)
+                {
+                    garbageFound = true;
+                }
             }
             //If the line is completely filled, clear it.
             if (cleared)
             {
+                if (garbageFound)
+                {
+                    Stats.stats.IncStat("Garbage cleared");
+                }
                 //If no hard block was found and antigrav isn't active, make the lines above fall.
                 //Note: There's also a rare edge case to handle with the second condition below: If a row is ENTIRELY filled with hard blocks, clear it anyway.
                 if ((hardBlocksFound == 0 || hardBlocksFound == width) && !ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.ANTIGRAV))
@@ -374,7 +384,7 @@ public class Board : MonoBehaviour
                 {
                     for (int xClear = 0; xClear < width; xClear++)
                     {
-                        if (cells[xClear, y] == Piece.HARD_TEXTURE_ID)
+                        if (cells[xClear, y] == Piece.HARD_TEXTURE_ID && hardBlocksFound != width) //SUPER rare edge case: If a row is totally filled with hard minoes AND antigrav is active, they still all need to be cleared completely. The extra "&& hardBlocksFound != width" check implements that.
                         {
                             cells[xClear, y] = Piece.COLOR_PINK; //Make the hard blocks no-longer-hard so they clear next time.
                         }
