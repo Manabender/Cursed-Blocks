@@ -186,6 +186,7 @@ public class Queue : MonoBehaviour
         {
             BuildNewBag();
         }
+        ref_Orchestrator.UpdateActiveCursesStats();
     }
 
     // AddBag() adds a bag (a list of pieces) to the end of the queue.

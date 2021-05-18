@@ -1148,6 +1148,7 @@ public class Orchestrator : MonoBehaviour
             UpdateSpecificCurseDisplays();
             bagNumber++;
             UpdateScoreMultiplier();
+            UpdateActiveCursesStats();
         }
         ref_ActivePiece.SpawnPiece(piece); //Has to happen after EndOfBagCurses() in case garbage gets pushed up into the spawning piece.
         //If the piece didn't come from hold, decrement the hold cooldown.
@@ -1231,7 +1232,7 @@ public class Orchestrator : MonoBehaviour
             return;
         }
         float pps = totalPieces * 1000f / gameTimer.ElapsedMilliseconds;
-        ref_PPSText.text = "PPS: " + pps.ToString("N2");
+        ref_PPSText.text = "PPS: " + pps.ToString("N2"); //N2 formatting means "show two decimal places".
     }
 
     //This method determines what the current score multiplier is and updates the display accordingly.
@@ -1265,6 +1266,18 @@ public class Orchestrator : MonoBehaviour
             PersistantVars.pVars.PlaySound(SoundEffects.LEVEL_UP);
         }
         gravity = GravityForLevel(scoreMultiplier);
+    }
+
+    public void UpdateActiveCursesStats()
+    {
+        for (int i = 0; i < PersistantVars.pVars.NUM_CURSES; i++)
+        {
+            if (ref_CurseManager.IsCurseActive((Curse)i))
+            {
+                string statName = ref_CurseManager.CURSE_DATA[i].name + " active bags";
+                Stats.stats.IncStat(statName);
+            }
+        }
     }
 
     public int DropScoreMultiplier()
