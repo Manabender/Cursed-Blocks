@@ -57,6 +57,9 @@ public class Orchestrator : MonoBehaviour
     public Text ref_ScoreInfoText;
     public Text ref_SprintLinesLeftText;
     public Text ref_CursesActiveDetailsText;
+    public Text ref_ClearScoreStatsText;
+    public Text ref_CurseStatsText;
+    public Text ref_MiscStatsText;
     public Text ref_GameModeText;
     public Text ref_PPSText;
     //Various """global""" variables
@@ -213,7 +216,7 @@ public class Orchestrator : MonoBehaviour
             HandleDAS();
             HandleGravity();
             CheckForGoal();
-            UpdateStatsText();
+            UpdatePlayerPerformanceText();
         }
     }
 
@@ -1048,6 +1051,7 @@ public class Orchestrator : MonoBehaviour
                 string pauseKeybind = gameObject.GetComponent<PlayerInput>().actions.FindAction("Pause").GetBindingDisplayString();
                 ref_PauseText.text = string.Format(PAUSED_TEXT, pauseKeybind);
                 SetCursesActiveDetailsText();
+                SetStatsText();
             }
             else
             {
@@ -1103,12 +1107,10 @@ public class Orchestrator : MonoBehaviour
     public void SetCursesActiveDetailsText()
     {
         string detailText = "";
-        int numActiveCurses = 0;
         for (int i = 0; i < PersistantVars.pVars.NUM_CURSES; i++)
         {
             if (ref_CurseManager.IsCurseActive((Curse)i))
             {
-                numActiveCurses++;
                 detailText += ref_CurseManager.CURSE_DATA[i].name + ": ";
                 detailText += ref_CurseManager.CURSE_DATA[i].description;
                 detailText += "\n\n";
@@ -1116,6 +1118,31 @@ public class Orchestrator : MonoBehaviour
         }
         ref_CursesActiveDetailsText.text = detailText;
     }
+
+    public void SetStatsText()
+    {
+        string detailText = "";
+        foreach (KeyValuePair<string,int> pair in Stats.stats.gameStats)
+        {
+            detailText += pair.Key;
+            detailText += "   ";
+            detailText += pair.Value;
+            detailText += "\n\n";
+        }
+        ref_ClearScoreStatsText.text = detailText;
+        string detailText2 = "";
+        detailText2 += "Score   ";
+        detailText2 += score;
+        detailText2 += "\n\nBags   ";
+        detailText2 += bagNumber;
+        detailText2 += "\n\nTime   ";
+        TimeSpan ts = gameTimer.Elapsed;
+        string elapsedTime = string.Format("{0:00}:{1:00}.{2:000}", Math.Floor(ts.TotalMinutes), ts.Seconds, ts.Milliseconds);
+        detailText2 += elapsedTime;
+        detailText2 += "\n\n";
+        detailText2 += ref_GameModeText.text;
+        ref_CurseStatsText.text = detailText2;
+    }    
 
     //This method spawns a new piece from the front of the queue, and makes the queue and incoming piece update as well.
     public void SpawnNextPiece()
@@ -1213,7 +1240,7 @@ public class Orchestrator : MonoBehaviour
         }
     }
 
-    public void UpdateStatsText()
+    public void UpdatePlayerPerformanceText()
     {
         if (PersistantVars.pVars.goal == ModeGoal.SURVIVE)
         {
