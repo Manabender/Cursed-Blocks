@@ -1045,6 +1045,10 @@ public class Orchestrator : MonoBehaviour
             PersistantVars.pVars.PlaySound(SoundEffects.GAME_PAUSE);
             if (!paused)
             {
+                if (firstInputMade)
+                {
+                    gameTimer.Stop();
+                }
                 paused = true;
                 ref_BoardContainer.SetActive(false);
                 ref_PauseTextObject.SetActive(true);
@@ -1055,6 +1059,10 @@ public class Orchestrator : MonoBehaviour
             }
             else
             {
+                if (firstInputMade)
+                {
+                    gameTimer.Start();
+                }
                 paused = false;
                 ref_BoardContainer.SetActive(true);
                 ref_PauseTextObject.SetActive(false);
