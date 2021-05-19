@@ -1111,14 +1111,7 @@ public class Orchestrator : MonoBehaviour
                 numActiveCurses++;
                 detailText += ref_CurseManager.CURSE_DATA[i].name + ": ";
                 detailText += ref_CurseManager.CURSE_DATA[i].description;
-                if (numActiveCurses % 2 == 0) //Two curse descriptions can fit on a line, so go to next line as necessary.
-                {
-                    detailText += "\n";
-                }
-                else
-                {
-                    detailText += "      ";
-                }
+                detailText += "\n\n";
             }
         }
         ref_CursesActiveDetailsText.text = detailText;
