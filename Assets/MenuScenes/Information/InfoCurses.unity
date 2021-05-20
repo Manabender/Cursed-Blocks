@@ -9331,40 +9331,38 @@ MonoBehaviour:
     is generated, a set of curses is generated along with it. This is how the set
     of curses is generated:
 
-    
 
-    -First, values are ramped. CP increases
-    by CP regen. Then, CP regen, CP floor, base cost cap, and max cost cap all increase
-    by their respective ramping values.
+    -First, values are ramped. CP increases by CP regen.
+    Then, CP regen, CP floor, base cost cap, and max cost cap all increase by their
+    respective ramping values.
 
-    -Now, curses are generated. So long
-    current CP exceeds the current CP floor, keep adding curses. Each curse added
-    costs CP.
+    -Now, curses are generated. So long current CP
+    exceeds the current CP floor, keep adding curses. Each curse added costs CP.
 
-    -Once CP goes under the CP floor, there is a small chance (equal
-    to CP floor ignore chance) that one more curse is added anyway. Only one curse
-    can be added this way.
+    -Once
+    CP goes under the CP floor, there is a small chance (equal to CP floor ignore
+    chance) that one more curse is added anyway. Only one curse can be added this
+    way.
 
 
     Adding a single curse follows this procedure:
 
-    
 
-    -First,
-    gather a list of all valid curses. A curse is valid if A) It''s not already active,
+    -First, gather
+    a list of all valid curses. A curse is valid if A) It''s not already active,
     B) Its cost is less than or equal to the base cost cap, and C) Its cost is less
     than or equal to current CP.
 
-    -From that list, one is chosen at random.
-    (If the list has no curses, then simply abort, and the CM is done for this bag)
-    That curse will be added, the only question now is how long it will last.
+    -From that list, one is chosen at random. (If
+    the list has no curses, then simply abort, and the CM is done for this bag) That
+    curse will be added, the only question now is how long it will last.
 
     -The
     curse''s cost ceiling is calculated. This is either the current max cost cap,
     or all available CP, whichever is lower.
 
-    -The curse''s max duration is
-    calculated. This is the cost ceiling divided by the curse''s cost, rounded down.
+    -The curse''s max duration is calculated.
+    This is the cost ceiling divided by the curse''s cost, rounded down.
 
     -A
     duration is selected. Two random numbers are generated, each between 1 and the
@@ -9373,7 +9371,6 @@ MonoBehaviour:
     -CP
     is deducted. The total cost is simply the curse''s base cost times the duration.
 
-    
 
     A
     curse''s cost is 10 times its level. The average curse is level 8. Most are around

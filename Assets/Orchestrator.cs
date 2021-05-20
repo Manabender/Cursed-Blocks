@@ -1127,7 +1127,82 @@ public class Orchestrator : MonoBehaviour
         ref_CursesActiveDetailsText.text = detailText;
     }
 
+    public readonly string[] CLEAR_SCORE_STAT_KEYS = new string[] { "Singles cleared", "Score from Singles" , "Doubles cleared" , "Score from Doubles",
+        "Triples cleared", "Score from Triples", "Quadruples cleared", "Score from Quadruples",
+        "Pentuples cleared", "Score from Pentuples", "Sextuples cleared", "Score from Sextuples",
+        "Septuples cleared", "Score from Septuples", "Octuples cleared", "Score from Octuples",
+        "T-spin minis", "Score from T-spin minis", "T-spin mini Singles cleared", "Score from T-spin mini Singles",
+        "T-spins", "Score from T-spins", "T-spin Singles cleared", "Score from T-spin Singles",
+        "T-spin Doubles cleared", "Score from T-spin Doubles", "T-spin Triples cleared", "Score from T-spin Triples",
+        "T-spin Quadruples cleared", "Score from T-spin Quadruples", "T-spin Pentuples cleared", "Score from T-spin Pentuples",
+        "T-spin Sextuples cleared", "Score from T-spin Sextuples", "Score from soft drop", "Score from hard drop",
+        "Score from combo", "Score from B2B", "All Clears", "Score from All Clears",
+        "Color Clears", "Score from Color Clears"};
+
+    public readonly string[] MISC_STAT_KEYS = new string[] { "Longest combo", "Longest B2B chain", "Total pieces dropped", "Total minoes dropped",
+        "Garbage added from Anti-skim", "Garbage added from Spiked Hold", "Pieces lost to Ephemeral Hold", "Times a piece slipped",
+        "Garbage received", "Garbage cleared"};
+
     public void SetStatsText()
+    {
+        string detailText = "";
+        foreach (string stat in CLEAR_SCORE_STAT_KEYS)
+        {
+            if (Stats.stats.gameStats.ContainsKey(stat))
+            {
+                detailText += stat;
+                detailText += "   ";
+                detailText += Stats.stats.gameStats[stat];
+                detailText += "\n";
+            }
+        }
+        ref_ClearScoreStatsText.text = detailText;
+
+        detailText = "";
+        for (int i = 0; i < PersistantVars.pVars.NUM_CURSES; i++)
+        {
+            string curseName = ref_CurseManager.CURSE_DATA[i].name;
+            string key = curseName + " active bags";
+            if (Stats.stats.gameStats.ContainsKey(key))
+            {
+                detailText += key;
+                detailText += "   ";
+                detailText += Stats.stats.gameStats[key];
+                detailText += "\n";
+            }
+        }
+        ref_CurseStatsText.text = detailText;
+
+        detailText = "";
+        //First, some stats that are already in Orchestrator.
+        TimeSpan ts = gameTimer.Elapsed;
+        string elapsedTime = string.Format("{0:00}:{1:00}.{2:000}", Math.Floor(ts.TotalMinutes), ts.Seconds, ts.Milliseconds);
+        detailText += "Score   ";
+        detailText += score;
+        detailText += "\n";
+        detailText += "Time   ";
+        detailText += elapsedTime;
+        detailText += "\n";
+        detailText += "Bags   ";
+        detailText += bagNumber;
+        detailText += "\n";
+        detailText += "Total lines cleared   ";
+        detailText += linesCleared;
+        detailText += "\n";
+        foreach (string stat in MISC_STAT_KEYS)
+        {
+            if (Stats.stats.gameStats.ContainsKey(stat))
+            {
+                detailText += stat;
+                detailText += "   ";
+                detailText += Stats.stats.gameStats[stat];
+                detailText += "\n";
+            }
+        }
+        ref_MiscStatsText.text = detailText;
+    }
+
+    /*public void SetStatsText()
     {
         string detailText = "";
         foreach (KeyValuePair<string,int> pair in Stats.stats.gameStats)
@@ -1150,7 +1225,7 @@ public class Orchestrator : MonoBehaviour
         detailText2 += "\n\n";
         detailText2 += ref_GameModeText.text;
         ref_CurseStatsText.text = detailText2;
-    }    
+    }    */
 
     //This method spawns a new piece from the front of the queue, and makes the queue and incoming piece update as well.
     public void SpawnNextPiece()
