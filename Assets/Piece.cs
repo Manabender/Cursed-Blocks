@@ -693,7 +693,7 @@ public class Piece : MonoBehaviour
             COLOR_PINK
         );
 
-        /*  Ya pentomino
+        /*  Ya pentomino (nice)
          *
          *     #
          *   ##@#
@@ -709,7 +709,7 @@ public class Piece : MonoBehaviour
             STANDARD_SPIN_CHECK_FULL_THRESHOLD
         );
 
-        /*  Yb pentomino
+        /*  Yb pentomino (nice)
          *
          *    #
          *   #@##

@@ -25,7 +25,7 @@ public class Queue : MonoBehaviour
     public int aaaaa = 0; //Please don't ask why this is here. It shouldn't be here. (It was used for testing purposes.) TODO: Remove, replace with countdown timer
 
     public readonly int[] DROUGHT_FLOOD_PIECES = new int[] { 1, 3, 4, 5, 6 }; //The pieces that drought and flood can add. Basically all tetrominoes except I and T.
-    public readonly int[] NICE_PENTOMINOES = new int[] { 12, 13, 14, 17, 18, 19, 21 }; //Pentomino curse gives one of these, then one of *any* pentomino. Includes I5, J5, L5, Pa, Pb, T5, and V.
+    public readonly int[] NICE_PENTOMINOES = new int[] { 12, 13, 14, 17, 18, 19, 21, 24, 25 }; //Pentomino curse gives one of these, then one of *any* pentomino. Includes I5, J5, L5, Pa, Pb, T5, V, Ya, and Yb.
     public readonly int[] VERY_NICE_PSEUDOS = new int[] { 32, 33, 39, 41, 42, 45, 46 }; //Pseudos are classified by their parity for the purpose of pseudo modes. "Very nice" pseudos have 2-2 parity; that is, if placed on a checkerboard, they would cover 2 squares of each color.
     public readonly int[] NICE_PSEUDOS = new int[] { 30, 31, 34, 35, 40, 43, 44, 48, 49, 50, 51, 54, 55 }; //"Nice" pseudos have 3-1 parity; on a checkerboard, they would cover 3 squares of one color and 1 of the other.
     public readonly int[] MEAN_PSEUDOS = new int[] { 36, 37, 38, 47, 52, 53, 56 }; //"Mean" pseudos have 4-0 parity; on a checkerboard, they would cover 4 squares of the same color every time.
