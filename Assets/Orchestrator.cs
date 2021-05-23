@@ -1196,6 +1196,10 @@ public class Orchestrator : MonoBehaviour
         detailText += "Total lines cleared   ";
         detailText += linesCleared;
         detailText += "\n";
+        detailText += ref_GameModeText.text;
+        detailText += "\n";
+        detailText += ref_VersionText.text;
+        detailText += "\n";
         foreach (string stat in MISC_STAT_KEYS)
         {
             if (Stats.stats.gameStats.ContainsKey(stat))
