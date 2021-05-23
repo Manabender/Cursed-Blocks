@@ -61,6 +61,7 @@ public class Orchestrator : MonoBehaviour
     public Text ref_CurseStatsText;
     public Text ref_MiscStatsText;
     public Text ref_GameModeText;
+    public Text ref_VersionText;
     public Text ref_PPSText;
     //Various """global""" variables
     public float gravity; //Gravity is the rate at which the active piece falls, measured in minoes per second. "Instant" ("20G") gravity is at least 11000 under default board height.
@@ -278,6 +279,7 @@ public class Orchestrator : MonoBehaviour
             ref_PauseToViewDetailsText.text = "";
         }
         SetGameModeText();
+        SetVersionText();
         Stats.stats.ResetObject();
     }
 
@@ -603,6 +605,11 @@ public class Orchestrator : MonoBehaviour
             if (PersistantVars.pVars.bagType == BagType.TETRA) { modeText += "Overtuned Ultra"; }
         }
         ref_GameModeText.text = modeText;
+    }
+
+    public void SetVersionText()
+    {
+        ref_VersionText.text = "Version: " + Application.version;
     }
 
     //This method is called when any gameover condition is detected and handles the transition to the post-game screen. //TODO: Actually add that post-game screen, in this first "blocks but not cursed yet" build, it doesn't exist.
