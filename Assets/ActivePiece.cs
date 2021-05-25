@@ -341,9 +341,14 @@ public class ActivePiece : Piece
                 break; //Once a single mino below the kill line is found, we're good. Game doesn't end.
             }
         }
-        if (!validMinoFound)
+        if (!validMinoFound && linesCleared == 0) //The extra "linesCleared == 0" clause implements a mechanic coined by Tetr.io called "clutch clears". As the code might suggest, it allows you to avoid a gameover from lock out, if the locking piece clears a line.
         {
             ref_Orchestrator.GameOver();
+        }
+        else if (!validMinoFound && linesCleared > 0)
+        {
+            PersistantVars.pVars.PlaySound(SoundEffects.PIECE_INITIAL_SKIP); //Play sound effect if clutch clear.
+            Stats.stats.IncStat("Clutch Clears");
         }
 
         //Anti-skim curse: If a non-spin single was cleared, add garbage.

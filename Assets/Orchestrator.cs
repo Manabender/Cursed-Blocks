@@ -1148,7 +1148,7 @@ public class Orchestrator : MonoBehaviour
 
     public readonly string[] MISC_STAT_KEYS = new string[] { "Longest combo", "Longest B2B chain", "Total pieces dropped", "Total minoes dropped",
         "Garbage added from Anti-skim", "Garbage added from Spiked Hold", "Pieces lost to Ephemeral Hold", "Times a piece slipped",
-        "Garbage received", "Garbage cleared"};
+        "Garbage received", "Garbage cleared", "Clutch Clears"};
 
     public void SetStatsText()
     {
