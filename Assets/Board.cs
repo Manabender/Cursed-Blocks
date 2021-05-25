@@ -431,7 +431,7 @@ public class Board : MonoBehaviour
     public void UpdateDisplayCells()
     {
         //If mist isn't active, just set display cells to actual cells.
-        if (!ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.MIST))
+        if (!ref_Orchestrator.ref_CurseManager.IsCurseActive(Curse.MIST) || ref_Orchestrator.gameover)
         {
             for (int x = 0; x < width; x++)
             {
