@@ -18,7 +18,7 @@ public class Queue : MonoBehaviour
     public GameObject ref_endOfBagIndicator;
     public SpriteRenderer ref_endOfBagIndicatorSprite;
     public SpriteRenderer ref_mirrorIndicatorSprite;
-    public QueuePiece[] queuePieceRefs = new QueuePiece[NUMBER_OF_PREVIEWS];
+    public QueuePiece[] queuePieceRefs;
     public Orchestrator ref_Orchestrator;
     public Text ref_IncomingGarbageText;
     public RectTransform ownTransform;
@@ -55,6 +55,7 @@ public class Queue : MonoBehaviour
     void Start()
     {
         ref_Orchestrator.ref_CurseManager.ResetObject(); //This ensures the Curse Manager is ready to add curses before trying to make it add curses.
+        queuePieceRefs = new QueuePiece[NUMBER_OF_PREVIEWS];
         ResetObject();
         //Initialize QueuePieces for display
         for (int i = 0; i < NUMBER_OF_PREVIEWS; i++)
